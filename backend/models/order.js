@@ -20,7 +20,7 @@ const transactionSchema = new Schema({
     ref: 'User',
     required: true
   },
-  serviceID: {
+  serviceId: {
     type: Schema.Types.ObjectId,
     ref: 'Service',
     required: true
