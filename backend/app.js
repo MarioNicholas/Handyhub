@@ -11,7 +11,6 @@ const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
-const { stat } = require("fs");
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -44,21 +43,7 @@ mongoose
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Max",
-          email: "max@test.com",
-          username: "max123",
-          password: "12345",
-          phoneNumber: "12345678",
-          address: "Kopo",
-        });
-        user.save();
-      }
-    });
     app.listen(3000);
-    console.log("aaa");
   })
   .catch((err) => {
     if (!err.statusCode) {
