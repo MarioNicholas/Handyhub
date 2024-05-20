@@ -21,7 +21,7 @@ const serviceSchema = new Schema({
   },
   provider: {
     type: Schema.Types.ObjectId,
-    ref: 'Provider',
+    ref: 'User',
     required: true
   },
   category: {
@@ -31,7 +31,7 @@ const serviceSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Product', serviceSchema);
+module.exports = mongoose.model('Service', serviceSchema);
 
 // const mongodb = require('mongodb');
 // const getDb = require('../util/database').getDb;
