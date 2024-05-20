@@ -27,4 +27,4 @@ const transactionSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Order', tra);
+module.exports = mongoose.model('Order', transactionSchema);
