@@ -9,7 +9,7 @@ exports.addService = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
   const city = req.body.city;
-  const provider = req.body.user;
+  const provider = req.userId;
   const category = req.body.category;
 
   Category.findOne({ name: category })
