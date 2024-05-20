@@ -6,6 +6,8 @@ const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
+router.post("/add-service", adminController.addService)
+
 // /admin/add-product => GET
 // router.get('/add-product', adminController.getAddProduct);
 

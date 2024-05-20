@@ -3,12 +3,16 @@ const path = require('path');
 const express = require('express');
 
 const serviceController = require('../controllers/service');
+const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
 router.get("/service", serviceController.getServices);
+router.get("/category", serviceController.getCategory);
+router.get("/orders", isAuth, serviceController.getCategory);
 
 router.get("/service/:serviceID", serviceController.getServiceByID)
+router.post("/service/:serviceID", serviceController.orderService)
 
 // router.get('/', shopController.getIndex);
 
