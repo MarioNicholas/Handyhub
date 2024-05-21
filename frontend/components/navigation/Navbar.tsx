@@ -7,7 +7,8 @@ export default function Navbar() {
 
     return (
         <View style={{
-            backgroundColor: '#027361'
+            backgroundColor: '#027361',
+            marginTop: 40,
         }}>
             <Searchbar
             mode="view"

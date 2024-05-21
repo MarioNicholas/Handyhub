@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Text } from 'react-native-paper'
 
 export default function Card(props: any) {
-    const FeaturedPlaceholder = require("@/assets/images/featured-placeholder.png")
     return (
         <View style={{
             display: "flex",
@@ -13,7 +12,7 @@ export default function Card(props: any) {
             borderColor:"#027361",
             borderRadius:10
         }}>
-            <Image source={FeaturedPlaceholder} style={{width: 120, height: 120}}/>
+            <Image source={props.image} style={{width: 120, height: 120}}/>
             <View style={{
             
             }}>
