@@ -1,28 +1,75 @@
 // const Product = require('../models/product');
 // const Order = require('../models/order');
 
+const { BSONType } = require("mongodb");
+const Category = require("../models/category");
+const Order = require("../models/order");
 const Service = require("../models/service");
+
+exports.getCategory = (req, res, next) => {
+  Category.find()
+    .then((category) => {
+      res.status(200).json({ category: category });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
 
 exports.getServices = (req, res, next) => {
   Service.find()
+    .populate("provider")
+    .populate("category")
     .then((services) => {
       res.status(200).json({ message: "Successful", services: services });
     })
     .catch((err) => {
-      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };
 
 exports.getServiceByID = (req, res, next) => {
   const serviceID = req.params.serviceID;
   Service.findById(serviceID)
+    .populate("provider")
+    .populate("category")
     .then((service) => {
       res.status(200).json({ service: service });
     })
     .catch((err) => {
-      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };
+
+exports.getOrderById = (req, res, next) => {
+  const user = req.userId;
+  const id = BSONType.ObjectId(user);
+  Order.find({ userId: user })
+    .populate("service")
+    .then((orders) => {
+      res.status(200).json({ orders: orders });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.orderService = (req,res,next) => {
+  const user = req.userId;
+  const id = BSONType.ObjectId(user);
+}
 
 // exports.getProducts = (req, res, next) => {
 //   Product.find()
