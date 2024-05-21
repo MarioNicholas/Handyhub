@@ -1,4 +1,48 @@
+const { Types } = require("mongoose");
+const Category = require("../models/category");
+const Service = require("../models/service");
+
 // const Product = require('../models/product');
+
+exports.addService = (req, res, next) => {
+  const name = req.body.name;
+  const price = req.body.price;
+  const description = req.body.description;
+  const city = req.body.city;
+  const provider = req.userId;
+  const category = req.body.category;
+
+  Category.findOne({ name: category })
+    .then((cat) => {
+      if (!cat) {
+        const error = new Error("Category not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      const newService = new Service({
+        name: name,
+        price: price,
+        description: description,
+        city: city,
+        provider: Types.ObjectId(provider),
+        category: cat._id,
+      });
+      return newService.save();
+    })
+    .then((result) => {
+      res.status(201).json({ message: "Service Added"});
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.editService = (req, res, next) => {};
+
+exports.deleteService = (req, res, next) => {};
 
 // exports.getAddProduct = (req, res, next) => {
 //   res.render('admin/edit-product', {
