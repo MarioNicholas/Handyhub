@@ -40,9 +40,67 @@ exports.addService = (req, res, next) => {
     });
 };
 
-exports.editService = (req, res, next) => {};
+exports.editService = (req, res, next) => {
+  const {
+    body,
+    params : {serviceID},
+  } = req;
+  Service.findOne({_id: serviceID})
+  .then((service) => {
+    if (!service) {
+      const error = new Error("Service not found");
+      error.statusCode = 404;
+      throw error;
+    }
 
-exports.deleteService = (req, res, next) => {};
+    if (service.provider.toString() !== userId) {
+      const error = new Error ("You do not have access to this servce")
+      error.statusCode = 403; 
+      throw error;
+    }
+    return Service.findByIdAndUpdate(serviceID,body,{ new: true });
+  })
+  .then(()=>{
+    res.status(200).json({ message: "Service Updated" });
+  })
+  .catch((err) => {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  });
+};
+
+exports.deleteService = (req, res, next) => {
+    const serviceID = req.params.serviceID;
+    const userId = req.userId;
+
+
+    Service.findOne({_id : serviceID})
+    .then((service) => {
+      if (!service) {
+        const error = new Error("Service not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      if (service.provider.toString() !== userId) {
+        const error = new Error ("You do not have access to this servce")
+        error.statusCode = 403;
+        throw error;
+      }
+      return Service.findByIdAndRemove(serviceID);
+    })
+    .then(()=>{
+      res.status(200).json({ message: "Service Deleted" });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
 
 // exports.getAddProduct = (req, res, next) => {
 //   res.render('admin/edit-product', {
