@@ -2,8 +2,54 @@ import { Link } from "expo-router";
 import * as React from "react";
 import { View, Image, ScrollView } from "react-native";
 import { Text, TextInput, Button } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function register() {
+  const emailRef = React.useRef<HTMLInputElement>(null);
+  const nameRef = React.useRef<HTMLInputElement>(null);
+  const phoneNumberRef = React.useRef<HTMLInputElement>(null);
+  const addressRef = React.useRef<HTMLInputElement>(null);
+  const usernameRef = React.useRef<HTMLInputElement>(null);
+  const passwordRef = React.useRef<HTMLInputElement>(null);
+
+  const signupHandler = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const enteredEmail = emailRef.current!.value;
+    const enteredName = nameRef.current!.value;
+    const enteredPhoneNumber = phoneNumberRef.current!.value;
+    const enteredAddress = addressRef.current!.value;
+    const enteredUsername = usernameRef.current!.value;
+    const enteredPassword = passwordRef.current!.value;
+
+    try {
+      const response = await fetch("http://localhost:8000/auth/signup", {
+        method: "PUT",
+        body: JSON.stringify({
+          email: enteredEmail,
+          name: enteredName,
+          phoneNumber: enteredPhoneNumber,
+          address: enteredAddress,
+          username: enteredUsername,
+          password: enteredPassword,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 422) {
+        throw new Error();
+      }
+
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error();
+      }
+
+      const result = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const logo = require("@/assets/images/splash.png");
   return (
     <View
@@ -123,7 +169,7 @@ export default function register() {
             width: "80%",
             marginVertical: 20,
           }}
-          onPress={() => console.log("Pressed")}
+          onPress={() => signupHandler}
         >
           Register
         </Button>

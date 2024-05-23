@@ -32,20 +32,6 @@ export default function Index() {
     { name: "apply", src: apply },
   ];
 
-  interface loginData {
-    username: string;
-    password: string;
-  }
-
-  interface signupData {
-    name: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-    username: string;
-    password: string;
-  }
-
   const tokenChecker = async () => {
     const token = await AsyncStorage.getItem("token");
     const expiryDate = await AsyncStorage.getItem("expiryDate");
@@ -55,7 +41,7 @@ export default function Index() {
     }
 
     if (new Date(expiryDate) <= new Date()) {
-      //logout
+      logoutHandler();
       return;
     }
 
@@ -87,72 +73,6 @@ export default function Index() {
     }, millisecond);
   };
 
-  const loginHandler = async (authData: loginData) => {
-    try {
-      const response = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        body: JSON.stringify({
-          username: authData.username,
-          password: authData.password,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 422) {
-        throw new Error();
-      }
-
-      if (response.status !== 200 && response.status !== 201) {
-        throw new Error();
-      }
-
-      const result = await response.json();
-      setToken(result.token);
-      setUserId(result.userId);
-      await AsyncStorage.setItem("token", result.token);
-      await AsyncStorage.setItem("userId", result.userId);
-      const remainingMilisecond = 60 * 60 * 1000;
-      const expiryDate = new Date().getTime() + remainingMilisecond;
-      await AsyncStorage.setItem("expiryDate", expiryDate.toString());
-      setAutoLogout(remainingMilisecond);
-      setIsAuth(true);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const signupHandler = async (authData: signupData) => {
-    try {
-      const response = await fetch("http://localhost:8000/auth/signup", {
-        method: "PUT",
-        body: JSON.stringify({
-          email: authData.email,
-          name: authData.name,
-          phoneNumber: authData.phoneNumber,
-          address: authData.address,
-          username: authData.username,
-          password: authData.password,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 422) {
-        throw new Error();
-      }
-
-      if (response.status !== 200 && response.status !== 201) {
-        throw new Error();
-      }
-
-      const result = await response.json();
-      setIsAuth(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <ScrollView
