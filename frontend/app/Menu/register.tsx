@@ -183,7 +183,6 @@ export default function Register() {
         >
           Already have an account?
           <Link href={"Menu/login"} style={{ fontWeight: "bold" }}>
-            {" "}
             Login Here
           </Link>
         </Text>
