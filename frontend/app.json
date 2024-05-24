@@ -4,7 +4,11 @@
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
+<<<<<<< HEAD
     "icon": "./assets/images/splash.png",
+=======
+    "icon": "./assets/images/icon.png",
+>>>>>>> f6257f3a854b304c02a9a52b177857a0b230e58b
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,7 +21,11 @@
     },
     "android": {
       "adaptiveIcon": {
+<<<<<<< HEAD
         "foregroundImage": "./assets/images/splash.png",
+=======
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+>>>>>>> f6257f3a854b304c02a9a52b177857a0b230e58b
         "backgroundColor": "#ffffff"
       }
     },
