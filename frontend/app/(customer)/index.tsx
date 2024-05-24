@@ -73,7 +73,6 @@ export default function Index() {
     }, millisecond);
   };
 
-
   return (
     <ScrollView
       style={{
@@ -138,7 +137,6 @@ export default function Index() {
         jobs={120}
         price={120000}
       />
-
       <Link href={"/login"}>Login</Link>
     </ScrollView>
   );
