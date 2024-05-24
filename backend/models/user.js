@@ -27,6 +27,12 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  favorite: [
+    {
+      type: Schema.Types.ObjectID,
+      ref: "Service",
+    }
+  ]
 });
 
 // userSchema.methods.addToCart = function(product) {

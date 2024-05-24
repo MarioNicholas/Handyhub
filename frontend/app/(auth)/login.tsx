@@ -5,10 +5,13 @@ import { Text, TextInput, Button } from 'react-native-paper'
 
 export default function login() {
     const logo = require("@/assets/images/splash.png")
+    const[username, setUsername] = React.useState("")
+    const[password, setPassword] = React.useState("")
     return (
         <View
         style={{
             backgroundColor: '#027361',
+            paddingTop: 20,
             height: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -21,7 +24,8 @@ export default function login() {
             }}/>
             <View style={{
                 backgroundColor: '#fff',
-                width: '70%',
+                width: '80%',
+                paddingHorizontal: 12,
                 borderWidth: 1,
                 borderRadius: 16,
                 borderColor: '#000',
@@ -37,6 +41,8 @@ export default function login() {
                     marginVertical: 10,
                     width: "90%"
                 }}
+                onChangeText={(username) => setUsername(username)}
+                value={username}
                 mode="outlined"/>
                 <TextInput label={"Password"} style={{
                     backgroundColor: "#fff",
@@ -45,6 +51,8 @@ export default function login() {
                     marginVertical: 10,
                     width: "90%"
                 }}
+                onChangeText={(password) => setPassword(password)}
+                value={password}
                 mode="outlined"/>
 
                 <Button mode="contained" style={{
@@ -55,7 +63,6 @@ export default function login() {
                     Login
                 </Button>
                 <Text variant="bodySmall" style={{ marginTop: 20, textAlign: 'center'}}>Don't have an account?<Link href={"/register"} style={{ fontWeight: 'bold'}}> Register Now</Link></Text>
-                
             </View>
         </View>
     )

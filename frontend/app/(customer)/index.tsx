@@ -17,14 +17,14 @@ export default function Index() {
   const apply = require("@/assets/images/apply.png");
   
   const services = [
-    { name: "electronics", src: electronics },
-    { name: "plumbing", src: plumbing },
-    { name: "cleaning", src: cleaning },
-    { name: "renovation", src: renovation },
-    { name: "gardening", src: gardening },
-    { name: "relocation", src: relocation },
-    { name: "others", src: others },
-    { name: "apply", src: apply }
+    { name: "Electronics", src: electronics },
+    { name: "Plumbing", src: plumbing },
+    { name: "Cleaning", src: cleaning },
+    { name: "Renovation", src: renovation },
+    { name: "Gardening", src: gardening },
+    { name: "Relocation", src: relocation },
+    { name: "Others", src: others },
+    { name: "Apply", src: apply }
   ];
 
   return (
@@ -54,19 +54,45 @@ export default function Index() {
         width: "100%",
         flexWrap: "wrap",
       }}>
+      <View style={{
+        margin: 8, 
+        display: "flex", 
+        flex: 4, 
+        flexDirection: "row", 
+        flexWrap: "wrap", 
+        width: "100%", 
+        justifyContent: "space-between"}}>
         {services.map((service)=> {
           return (
-            <View key={service.name} style={{margin: 8}}>
-              <Image source={service.src} style={{width: 62, height: 69}}/>
-            </View>
+            <Link href={service.name.toLowerCase()} key={service.name}>
+              <View style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginHorizontal: 2,
+                overflow: "visible",
+                width: 70,
+                height: 80,
+              }}>
+                  <Image source={service.src} style={{
+                    
+                  }}/>
+                  <Text variant="labelMedium" style={{
+                    fontWeight: "bold",
+                  }}>{service.name}</Text>
+              </View>
+            </Link>
           )
         })}
+        </View>
       </View>
       
+      <View style={{
+        marginBottom: 20
+      }}>
       <Text variant="headlineLarge" style={{fontWeight: 'bold', marginTop: 20, marginBottom: 10}}>Featured</Text>
-      <Card name="Alan Smith" image={FeaturedPlaceholder} role="Hedge Specialist" rating={4.9} jobs={120} price={120000}/>
-      
-      <Link href={"/login"}>Login</Link>
+        <Card name="Alan Smith" image={FeaturedPlaceholder} role="Hedge Specialist" rating={4.9} jobs={120} price={120000}/>      
+      </View>
     </ScrollView>
   );
 }
