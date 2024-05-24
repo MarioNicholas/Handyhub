@@ -22,6 +22,16 @@ export default function Index() {
   const [isAuth, setIsAuth] = React.useState<boolean>(false);
 
   const services = [
+<<<<<<< HEAD
+    { name: "Electronics", src: electronics },
+    { name: "Plumbing", src: plumbing },
+    { name: "Cleaning", src: cleaning },
+    { name: "Renovation", src: renovation },
+    { name: "Gardening", src: gardening },
+    { name: "Relocation", src: relocation },
+    { name: "Others", src: others },
+    { name: "Apply", src: apply }
+=======
     { name: "electronics", src: electronics },
     { name: "plumbing", src: plumbing },
     { name: "cleaning", src: cleaning },
@@ -30,6 +40,7 @@ export default function Index() {
     { name: "relocation", src: relocation },
     { name: "others", src: others },
     { name: "apply", src: apply },
+>>>>>>> dev
   ];
 
   const tokenChecker = async () => {
@@ -96,6 +107,48 @@ export default function Index() {
       >
         <Image source={Hero} style={{ width: 330, height: 170 }} />
       </View>
+<<<<<<< HEAD
+      <Text variant="headlineLarge" style={{fontWeight: 'bold', marginTop: 20, marginBottom: 10}}>Services</Text>
+      
+      <View style={{
+        display:'flex',
+        flex: 4,
+        justifyContent: "center",
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        width: "100%",
+        flexWrap: "wrap",
+      }}>
+      <View style={{
+        margin: 8, 
+        display: "flex", 
+        flex: 4, 
+        flexDirection: "row", 
+        flexWrap: "wrap", 
+        width: "100%", 
+        justifyContent: "space-between"}}>
+        {services.map((service)=> {
+          return (
+            <Link href={service.name.toLowerCase()} key={service.name}>
+              <View style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginHorizontal: 2,
+                overflow: "visible",
+                width: 70,
+                height: 80,
+              }}>
+                  <Image source={service.src} style={{
+                    
+                  }}/>
+                  <Text variant="labelMedium" style={{
+                    fontWeight: "bold",
+                  }}>{service.name}</Text>
+              </View>
+            </Link>
+          )
+=======
       <Text
         variant="headlineLarge"
         style={{ fontWeight: "bold", marginTop: 20, marginBottom: 10 }}
@@ -120,8 +173,19 @@ export default function Index() {
               <Image source={service.src} style={{ width: 62, height: 69 }} />
             </View>
           );
+>>>>>>> dev
         })}
+        </View>
       </View>
+<<<<<<< HEAD
+      
+      <View style={{
+        marginBottom: 20
+      }}>
+      <Text variant="headlineLarge" style={{fontWeight: 'bold', marginTop: 20, marginBottom: 10}}>Featured</Text>
+        <Card name="Alan Smith" image={FeaturedPlaceholder} role="Hedge Specialist" rating={4.9} jobs={120} price={120000}/>      
+      </View>
+=======
 
       <Text
         variant="headlineLarge"
@@ -138,6 +202,7 @@ export default function Index() {
         price={120000}
       />
       <Link href={"/login"}>Login</Link>
+>>>>>>> dev
     </ScrollView>
   );
 }

@@ -28,6 +28,10 @@ const serviceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Category',
     required: true
+  },
+  specialty: {
+    type : String,
+    required: true
   }
 });
 

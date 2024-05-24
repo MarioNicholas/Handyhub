@@ -19,45 +19,31 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Home',
-            tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
+            tabBarIcon: ({ color }) => <FontAwesome size={24} name="home" color={color} />,
           }}
         />
         <Tabs.Screen
           name="favourites"
           options={{
             title: 'Favourites',
-            tabBarIcon: ({ color }) => <FontAwesome size={28} name="heart" color={color} />,
+            tabBarIcon: ({ color }) => <FontAwesome size={24} name="heart" color={color} />,
           }}
         />
         <Tabs.Screen
           name="history"
           options={{
             title: 'History',
-            tabBarIcon: ({ color }) => <FontAwesome size={28} name="history" color={color} />,
+            tabBarIcon: ({ color }) => <FontAwesome size={24} name="history" color={color} />,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
             title: 'Profile',
-            tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
+            tabBarIcon: ({ color }) => <FontAwesome size={24} name="user" color={color} />,
           }}
         />
       </Tabs>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  navbar: {
-    height: 60,
-    backgroundColor: '#027361',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navbarText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
