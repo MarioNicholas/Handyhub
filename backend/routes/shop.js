@@ -11,8 +11,12 @@ router.get("/service", serviceController.getServices);
 router.get("/category", serviceController.getCategory);
 router.get("/orders", isAuth, serviceController.getCategory);
 
-router.get("/service/:serviceID", serviceController.getServiceByID)
-router.post("/service/:serviceID", serviceController.orderService)
+router.get("/service/:serviceID", serviceController.getServiceByID);
+router.post("/service/:serviceID", serviceController.orderService);
+
+router.get("favorite", isAuth, serviceController.getFavorites);
+router.post("/favorite/:serviceID", isAuth, serviceController.postFavorites);
+router.delete("/favorite/:serviceID", isAuth, serviceController.deleteFavorite);
 
 // router.get('/', shopController.getIndex);
 
