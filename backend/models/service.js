@@ -32,6 +32,10 @@ const serviceSchema = new Schema({
   specialty: {
     type : String,
     required: true
+  },
+  jobs: {
+    type: Number,
+    required: true
   }
 });
 
