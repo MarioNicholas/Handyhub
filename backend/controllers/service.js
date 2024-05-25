@@ -115,15 +115,15 @@ exports.deleteFavorite = async (req,res,next) => {
   }
 }
 
-exports.orderService = (req,res,next) => {
-  const userId = req.userId;
+// exports.orderService = (req,res,next) => {
+//   const userId = req.userId;
 
-  try {
-    const user = await User
-  } catch (err) {
+//   try {
+//     const user = await User
+//   } catch (err) {
 
-  }
-}
+//   }
+// }
 
 
 // exports.getProducts = (req, res, next) => {
