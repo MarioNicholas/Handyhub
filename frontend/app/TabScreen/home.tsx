@@ -52,9 +52,9 @@ export default function Home() {
         tokenChecker();
     }, []);
 
-    React.useEffect(() => {
-        setRefreshKey(prevKey => prevKey + 1);
-    }, [isAuth]);
+    // React.useEffect(() => {
+    //     setRefreshKey(prevKey => prevKey + 1);
+    // }, [isAuth]);
 
     const logoutHandler = async () => {
         await AsyncStorage.removeItem("token");
@@ -67,7 +67,6 @@ export default function Home() {
 
     return (
         <ScrollView
-        key={refreshKey}
         style={{
             paddingHorizontal: 30,
             flexGrow: 1,
@@ -139,7 +138,7 @@ export default function Home() {
         <Text variant="headlineLarge" style={{fontWeight: 'bold', marginTop: 20, marginBottom: 10}}>Featured</Text>
             <Card name="Alan Smith" image={FeaturedPlaceholder} role="Hedge Specialist" rating={4.9} jobs={120} price={120000}/>      
         </View>
-        <Link href={"../Menu/confirmed"}>confirm</Link>
+        {/* <Link href={"../Menu/detail"}>confirm</Link> */}
         </ScrollView>
     );
 }

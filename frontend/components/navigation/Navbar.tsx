@@ -2,7 +2,6 @@ import * as React from 'react';
 import { IconButton, Menu, PaperProvider, Searchbar } from 'react-native-paper';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router'; // Ubah 'router' menjadi 'useRouter'
-<<<<<<< HEAD
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Navbar() {
@@ -10,18 +9,12 @@ export default function Navbar() {
     const [token, setToken] = React.useState<string | null>(null);
     const [userId, setUserId] = React.useState<string | null>(null);
     const [isAuth, setIsAuth] = React.useState<boolean>(false);
-=======
-
-export default function Navbar() {
-    const [searchQuery, setSearchQuery] = React.useState('');
->>>>>>> f6257f3a854b304c02a9a52b177857a0b230e58b
     // const [visible, setVisible] = React.useState(false);
     const router = useRouter(); // Ubah 'router' menjadi 'useRouter'
 
     // const openMenu = () => setVisible(true);
     // const closeMenu = () => setVisible(false);
 
-<<<<<<< HEAD
     const tokenChecker = async () => {
         const token = await AsyncStorage.getItem("token");
         
@@ -56,21 +49,11 @@ export default function Navbar() {
 
     
 
-=======
-    const navigateToLogin = () => {
-        router.push('/login');
-    };
-
->>>>>>> f6257f3a854b304c02a9a52b177857a0b230e58b
     return (
         // <View style={{ flex: 1, backgroundColor: "red", maxHeight: 103 }}>
             // <PaperProvider>
                 <View style={{
                     backgroundColor: '#027361',
-<<<<<<< HEAD
-=======
-                    marginTop: 40,
->>>>>>> f6257f3a854b304c02a9a52b177857a0b230e58b
                     marginBottom: 0,
                     display: "flex",
                     flexDirection: "row",
@@ -106,7 +89,6 @@ export default function Navbar() {
                             size={26}
                             onPress={() => console.log('Pressed')}
                         />
-<<<<<<< HEAD
                         {isAuth ? <IconButton
                             icon="logout"
                             iconColor="red"
@@ -114,20 +96,13 @@ export default function Navbar() {
                             onPress={navigateToAuth}
                         />
                         : 
-=======
->>>>>>> f6257f3a854b304c02a9a52b177857a0b230e58b
                         <IconButton
                             icon="login"
                             iconColor="white"
                             size={26}
-<<<<<<< HEAD
                             onPress={navigateToAuth}
                         />
                         }
-=======
-                            onPress={navigateToLogin}
-                        />
->>>>>>> f6257f3a854b304c02a9a52b177857a0b230e58b
                         {/* <Menu
                             statusBarHeight={27}
                             visible={visible}
