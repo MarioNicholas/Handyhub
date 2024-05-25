@@ -22,6 +22,7 @@ const serviceSchema = new Schema({
   provider: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    ref: 'User',
     required: true
   },
   category: {
@@ -32,9 +33,14 @@ const serviceSchema = new Schema({
   specialty: {
     type : String,
     required: true
+  },
+  jobs: {
+    type: Number,
+    required: true
   }
 });
 
+module.exports = mongoose.model('Service', serviceSchema);
 module.exports = mongoose.model('Service', serviceSchema);
 
 // const mongodb = require('mongodb');

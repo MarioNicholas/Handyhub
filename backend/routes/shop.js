@@ -10,8 +10,10 @@ const router = express.Router();
 router.get("/service", serviceController.getServices);
 router.get("/category", serviceController.getCategory);
 router.get("/orders", isAuth, serviceController.getCategory);
+router.get("/profile", isAuth, serviceController.getProfile);
 
 router.get("/service/:serviceID", serviceController.getServiceByID);
+router.get("/services/:categoryName", serviceController.getServicesByCategory);
 // router.post("/service/:serviceID", serviceController.orderService);
 
 router.get("favorite", isAuth, serviceController.getFavorites);

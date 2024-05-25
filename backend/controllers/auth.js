@@ -17,6 +17,7 @@ exports.signup = (req, res, next) => {
   const email = req.body.email;
   const phoneNumber = req.body.phoneNumber;
   const address = req.body.address;
+  const favorite = [];
 
   bcrypt
     .hash(password, 12)
@@ -28,6 +29,7 @@ exports.signup = (req, res, next) => {
         password: hashedPassword,
         phoneNumber: phoneNumber,
         address: address,
+        favorite: favorite,
       });
       return user.save();
     })
@@ -72,7 +74,7 @@ exports.login = (req, res, next) => {
         "superdupersecret",
         { expiresIn: "1h" }
       );
-      res.status(200).json({ token: token, userId: loadedUser._id.toString() });
+      res.status(200).json({ token: token, userId: loadedUser._id.toString(), name: loadedUser.name });
     })
     .catch((err) => {
       if (!err.statusCode) {

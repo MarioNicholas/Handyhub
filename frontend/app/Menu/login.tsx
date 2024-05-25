@@ -1,53 +1,56 @@
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import * as React from 'react'
-import { View, Image } from "react-native";
-import { Text, TextInput, Button } from 'react-native-paper'
+import { View, Image, GestureResponderEvent } from "react-native";
+import { Text, TextInput,Button } from 'react-native-paper'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function login() {
-    const usernameRef = React.useRef<HTMLInputElement>(null)
-    const passwordRef = React.useRef<HTMLInputElement>(null)
-
-    const loginHandler = async (event: React.FormEvent) => {
-        event.preventDefault();
-
-        const enteredUsername = usernameRef.current!.value;
-        const enteredPassword = passwordRef.current!.value;
-
-        try {
-          const response = await fetch("http://localhost:8000/auth/login", {
-            method: "POST",
-            body: JSON.stringify({
-              username: enteredUsername,
-              password: enteredPassword,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-    
-          if (response.status === 422) {
-            throw new Error();
-          }
-    
-          if (response.status !== 200 && response.status !== 201) {
-            throw new Error();
-          }
-    
-          const result = await response.json();
-          await AsyncStorage.setItem("token", result.token);
-          await AsyncStorage.setItem("userId", result.userId);
-          const remainingMilisecond = 60 * 60 * 1000;
-          const expiryDate = new Date().getTime() + remainingMilisecond;
-          await AsyncStorage.setItem("expiryDate", expiryDate.toString());
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      
-    const logo = require("@/assets/images/splash.png")
+export default function Login() {
     const[username, setUsername] = React.useState("")
     const[password, setPassword] = React.useState("")
+    const router = useRouter();
+
+    const loginHandler = async (event: GestureResponderEvent) => {
+        event.preventDefault();
+        console.log(username);
+        console.log(password);
+        
+    
+
+        try {
+            const response = await fetch("http://192.168.1.13:8000/auth/login", {
+                method: "POST",
+                body: JSON.stringify({
+                username: username,
+                password: password,
+                }),
+                headers: {
+                "Content-Type": "application/json",
+                },
+            });
+        
+            if (response.status === 422) {
+                throw new Error("halo");
+            }
+        
+            if (response.status !== 200 && response.status !== 201) {
+                throw new Error();
+            }
+        
+            const result = await response.json();
+            await AsyncStorage.setItem("token", result.token);
+            await AsyncStorage.setItem("userId", result.userId);
+            const remainingMilisecond = 60 * 60 * 1000;
+            const expiryDate = new Date().getTime() + remainingMilisecond;
+            await AsyncStorage.setItem("expiryDate", expiryDate.toString());
+            router.replace("/")
+            
+            } catch (err) {
+            console.log(err);
+            }
+        };
+        
+    const logo = require("@/assets/images/splash.png")
+
     return (
         <View
         style={{
@@ -83,7 +86,6 @@ export default function login() {
                     width: "90%"
                 }}
                 onChangeText={(username) => setUsername(username)}
-                value={username}
                 mode="outlined"/>
                 <TextInput label={"Password"} style={{
                     backgroundColor: "#fff",
@@ -93,17 +95,16 @@ export default function login() {
                     width: "90%"
                 }}
                 onChangeText={(password) => setPassword(password)}
-                value={password}
                 mode="outlined"/>
 
                 <Button mode="contained" style={{
                     backgroundColor: "#027361",
                     width: "80%",
                     marginVertical: 20
-                }} onPress={() => loginHandler}>
+                }} onPress={loginHandler}>
                     Login
                 </Button>
-                <Text variant="bodySmall" style={{ marginTop: 20, textAlign: 'center'}}>Don't have an account?<Link href={"/register"} style={{ fontWeight: 'bold'}}> Register Now</Link></Text>
+                <Text variant="bodySmall" style={{ marginTop: 20, textAlign: 'center'}}>Don't have an account?<Link href={"Menu/register"} style={{ fontWeight: 'bold'}}> Register Now</Link></Text>
             </View>
         </View>
     )

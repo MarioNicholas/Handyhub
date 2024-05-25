@@ -20,6 +20,26 @@ exports.getCategory = (req, res, next) => {
     });
 };
 
+exports.getProfile = async (req,res,next) => {
+  const userId = req.userId
+  try {
+    const user = await User.findById(userId);
+    const userProfile = {
+      name: user.name,
+      phoneNumber: user.phoneNumber,
+      email: user.email,
+      username: user.username,
+      address: user.address
+    }
+    res.status(200).json({user: userProfile});
+  } catch(err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err);
+  }
+}
+
 exports.getServices = (req, res, next) => {
   Service.find()
     .populate("provider")
@@ -34,6 +54,22 @@ exports.getServices = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getServicesByCategory = async (req,res,next) => {
+  const categoryName = req.params.categoryName;
+  try {
+    const category = await Category.findOne({name: categoryName}).exec();
+    console.log(category);
+    const categoryId = category._id;
+    const services = await Service.find({category : categoryId}).populate("provider").exec();
+    res.status(200).json({services: services});
+  }catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+}
 
 exports.getServiceByID = (req, res, next) => {
   const serviceID = req.params.serviceID;
@@ -87,7 +123,7 @@ exports.postFavorites = async  (req,res,next) => {
 
   try {
     const user = await User.findById(req.userId);
-    const service = await User.findById(serviceId);
+    const service = await Service.findById(serviceId);
     user.favorite.push(service);
     await user.save();
     res.status(201).json({message: "Service added to favorite"});

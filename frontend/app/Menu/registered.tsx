@@ -3,11 +3,11 @@ import * as React from 'react'
 import { View, Image } from "react-native";
 import { Text, TextInput, Button } from 'react-native-paper'
 
-export default function registered() {
+export default function Registered() {
     const logo = require("@/assets/images/splash.png")
     const router = useRouter()
     const navigateToLogin = () => {
-        router.push('/login');
+        router.push('Menu/login');
     };
     return (
         <View

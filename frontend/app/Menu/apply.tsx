@@ -3,7 +3,7 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import { Button, Text, TextInput } from 'react-native-paper'
 
-export default function apply() {
+export default function Apply() {
     return (
         <ScrollView style={{
             display: "flex",
