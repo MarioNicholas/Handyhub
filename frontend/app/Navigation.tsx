@@ -15,7 +15,7 @@ import Registered from "./Menu/registered";
 import Gardening from "./Menu/gardening";
 import Electronics from "./Menu/electronics";
 import Confirmed from "./Menu/confirmed";
-// import Detail from "./Menu/detail";
+import Detail from "./Menu/detail";
 
 const Tab = createBottomTabNavigator();
 const MenuStack = createNativeStackNavigator();
@@ -29,7 +29,7 @@ function MenuStackGroup() {
       <MenuStack.Screen name="Registered" component={Registered} />
       <MenuStack.Screen name="Electronics" component={Electronics} />
       <MenuStack.Screen name="Gardening" component={Gardening} />
-      {/* <MenuStack.Screen name="Detail" component={Detail} /> */}
+      <MenuStack.Screen name="Detail" component={Detail} />
       <MenuStack.Screen name="Confirmed" component={Confirmed} />
       <MenuStack.Screen name="Apply" component={Apply} />
     </MenuStack.Navigator>
@@ -87,8 +87,8 @@ function TabGroup() {
 
 export default function Navigation() {
   return (
-    <NavigationContainer>
+    <>
       <TabGroup />
-    </NavigationContainer>
+    </>
   );
 }

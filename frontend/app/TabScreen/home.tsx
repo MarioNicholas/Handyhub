@@ -138,7 +138,7 @@ export default function Home() {
         <Text variant="headlineLarge" style={{fontWeight: 'bold', marginTop: 20, marginBottom: 10}}>Featured</Text>
             <Card name="Alan Smith" image={FeaturedPlaceholder} role="Hedge Specialist" rating={4.9} jobs={120} price={120000}/>      
         </View>
-        {/* <Link href={"../Menu/detail"}>confirm</Link> */}
+        <Link href={"../Menu/detail"}>confirm</Link>
         </ScrollView>
     );
 }
