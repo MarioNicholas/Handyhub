@@ -1,7 +1,9 @@
 import Card from '@/components/Card'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { Link } from 'expo-router';
 import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, View } from 'react-native'
+import { Pressable, SafeAreaView, ScrollView, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 interface Electronics{
@@ -20,6 +22,7 @@ interface ElectronicsArray extends Array<Electronics>{};
 export default function Electronics() {
     const[electronics, setElectronics] = React.useState<ElectronicsArray>([])
     const[loading, setLoading] = React.useState(true)
+    const navigation : any  = useNavigation()
     async function getElectronics() {        
         const response = await fetch("http://192.168.1.13:8000/services/Electronics", {
         });
@@ -38,6 +41,7 @@ export default function Electronics() {
         <SafeAreaView style={{
             paddingHorizontal: 28,
         }}>
+            {!loading ? 
             <ScrollView>
                 <Text variant='displaySmall' style={{
                     fontWeight: "bold",
@@ -46,14 +50,19 @@ export default function Electronics() {
                     Electronics
                 </Text>
                 {electronics.map((electronic) => (
-                    <View style={{
-                        marginVertical: 8
-                    }}>
-                        <Card props={electronic} key={electronic._id}/>
-                    </View>
+                        <Pressable style={{
+                            marginVertical: 8
+                        }} key={electronic._id} onPress={() => {
+                            navigation.push("MenuStack", {screen: "Detail", id: electronic._id})
+                        }}>
+                            <Card props={electronic}/>
+                        </Pressable>
                     )                    
                 )}
             </ScrollView>
+            : 
+            <Text>Loading</Text>
+            }
         </SafeAreaView>
     )
 }

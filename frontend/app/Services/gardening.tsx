@@ -26,31 +26,38 @@ export default function Gardening() {
         setGardenings(result.gardening);
         setLoading(false)
         }
-              
+        
         React.useEffect(() => {
             getGardenings();
         }, [])
     return (
-      <SafeAreaView style={{
-        paddingHorizontal: 28,
-    }}>
-        <ScrollView>
-            <Text variant='displaySmall' style={{
-                fontWeight: "bold",
-                marginVertical: 20
-            }}>
-                Electronics
-            </Text>
-            {gardenings.map((gardening) => (
-                <View style={{
-                    marginVertical: 8
-                }}>
-                    <Card props={gardening} />
-                </View>
-                )                    
-            )}
-        </ScrollView>
-    </SafeAreaView>
+        <SafeAreaView style={{
+            paddingHorizontal: 28,
+        }}>
+            {!loading ? (
+                    <ScrollView>
+                        <Text variant='displaySmall' style={{
+                            fontWeight: "bold",
+                            marginVertical: 20
+                        }}>
+                            Electronics
+                        </Text>
+                        {gardenings.map((gardening) => (
+                            <View style={{
+                                marginVertical: 8
+                            }}>
+                                <Card props={gardening} />
+                            </View>
+                            )                    
+                        )}
+                    </ScrollView>
+            ) : (
+                <Text>Loading</Text>
+            )
+            }
+        </SafeAreaView>
+
     )
+      
 }
 

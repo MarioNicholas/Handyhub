@@ -1,9 +1,10 @@
 import { Link } from "expo-router";
-import { View, Image, ScrollView } from "react-native";
+import { View, Image, ScrollView, Pressable } from "react-native";
 import * as React from "react";
 import { Text } from "react-native-paper";
 import Card from "@/components/Card";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Home() {
     const Hero = require("@/assets/images/banner.png");
@@ -65,6 +66,12 @@ export default function Home() {
         setIsAuth(false);
     };
 
+    const navigation = useNavigation()
+
+    const navigationHandler = (href: string) => {
+        navigation.push("Electronics")
+    }
+
     return (
         <ScrollView
         style={{
@@ -109,8 +116,8 @@ export default function Home() {
             justifyContent: "space-between"}}>
             {services.map((service)=> {
             return (
-                <Link href={`Menu/${service.name.toLowerCase()}`} key={service.name}>
-                <View style={{
+                <Link href={`Services/${service.name.toLowerCase()}`} key={service.name}>
+                <Pressable style={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -118,14 +125,14 @@ export default function Home() {
                     overflow: "visible",
                     width: 70,
                     height: 80,
-                }}>
+                }} onPress={() => navigationHandler(`Services/${service.name.toLowerCase()}`)}>
                     <Image source={service.src} style={{
                         
                     }}/>
                     <Text variant="labelMedium" style={{
                         fontWeight: "bold",
                     }}>{service.name}</Text>
-                </View>
+                </Pressable>
                 </Link>
             )
             })}
@@ -139,6 +146,7 @@ export default function Home() {
             <Card name="Alan Smith" image={FeaturedPlaceholder} role="Hedge Specialist" rating={4.9} jobs={120} price={120000}/>      
         </View>
         <Link href={"../Menu/detail"}>confirm</Link>
+        <Link href={"../Menu/order"}>order</Link>
         </ScrollView>
     );
 }

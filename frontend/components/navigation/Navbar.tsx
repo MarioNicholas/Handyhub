@@ -54,7 +54,6 @@ export default function Navbar() {
             // <PaperProvider>
                 <View style={{
                     backgroundColor: '#027361',
-                    marginBottom: 0,
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
