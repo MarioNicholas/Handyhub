@@ -2,18 +2,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import { Link } from 'expo-router'
 import React, { useState } from 'react'
-import { ScrollView, View, GestureResponderEvent } from 'react-native'
+import { ScrollView, View, GestureResponderEvent, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import { Button, RadioButton, Text, TextInput } from 'react-native-paper'
+import * as ImagePicker from 'expo-image-picker';
 
 export default function Apply() {
     const[serviceName, setServiceName] = useState("")
     const[category, setCategory] = useState("")
     const[city, setCity] = useState("")
-    const[price, setPrice] = useState(0)
+    const[price, setPrice] = useState("")
     const[specialty, setSpecialty] = useState("")
     const[description, setDescription] = useState("")
     const[token, setToken] = useState<string|null>("")
-
+    const [images, setImages] = useState<(string | null)[]>([null, null, null, null]);
+    
     const tokenChecker = async () => {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
@@ -29,43 +31,76 @@ export default function Apply() {
 
     const navigation = useNavigation()
 
-    const submitHandler = async (event: GestureResponderEvent) => {
-        
-        event.preventDefault();
+    const pickImage = async (index: number) => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
 
-        try {
-            const response = await fetch("http://192.168.1.13:8000/admin/add-service", {
-                method: "POST",
-                body: JSON.stringify({
-                    name: serviceName,
-                    price: price,
-                    city: city,
-                    category: category,
-                    description: description,
-                    specialty: specialty,
-                }),
-                headers: {
-                    "Content-Type" : "application/json",
-                    Authorization: "Bearer " + token
-                }
-            });
-
-            if (response.status === 422) {
-                throw new Error()
-            }
-
-            if (response.status !== 200 && response.status !== 201) {
-                throw new Error()
-            }
-
-            const result = await response.json()
-            console.log(result);
-            //redirect
-            navigation.navigate("Home" as never)
-        } catch (err) {
-            console.log(err)
+        if (!result.canceled && result.assets) {
+            const newImages = [...images];
+            newImages[index] = result.assets[0].uri;
+            setImages(newImages);
         }
-    }
+    };
+
+    const submitHandler = async (event: GestureResponderEvent) => {
+        event.preventDefault();
+        
+            // Create a new FormData instance
+            const formData = new FormData();
+        
+            // Append service details to formData
+            formData.append('name', serviceName);
+            formData.append('price', price.toString());
+            formData.append('city', city);
+            formData.append('category', category);
+            formData.append('description', description);
+            formData.append('specialty', specialty);
+
+            images.forEach((imageUri, index) => {
+                if (imageUri) {
+                    const fileName = imageUri.split('/').pop();
+                    if (fileName) {
+                        const fileType = imageUri.includes('jpg') || imageUri.includes('jpeg') ? 'image/jpeg' : 'image/png';
+                    
+                        formData.append('images', {
+                            uri: imageUri,
+                            name: fileName,
+                            type: fileType,
+                            } as any);
+                        }
+                    }
+                });
+        
+            try {
+            // Make a single fetch request to submit the service details along with the image
+            const response = await fetch('http://192.168.1.13:8000/admin/add-service', {
+                method: 'POST',
+                headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type' : 'multipart/form-data'
+                },
+                body: formData,
+            });
+        
+            if (response.status === 422) {
+                throw new Error('Validation failed');
+            }
+        
+            if (response.status !== 200 && response.status !== 201) {
+                throw new Error('Failed to add service');
+            }
+        
+            const result = await response.json();
+            // Redirect
+            navigation.navigate("Home" as never);
+            } catch (error) {
+            console.log(error);
+            }
+        };
     
     return (
         <ScrollView style={{
@@ -184,11 +219,20 @@ export default function Apply() {
             }} multiline={true}
             onChangeText={(description) => {setDescription(description)}}
             mode="outlined"/>
-            <Text variant='bodyLarge' style={{
-                fontWeight: "bold",
-                marginVertical: 20,
-                textAlign:"left"
-            }}>Upload Picture</Text>
+            <View style={styles.container}>
+                <Text style={styles.title}>Upload Picture</Text>
+                <View style={styles.imageRow}>
+                    {images.map((image, index) => (
+                        <TouchableOpacity key={index} onPress={() => pickImage(index)} style={styles.imagePlaceholder}>
+                            {image ? (
+                                <Image source={{ uri: image }} style={styles.image} />
+                            ) : (
+                                <Text style={styles.imageText}>+</Text>
+                            )}
+                        </TouchableOpacity>
+                    ))}
+            </View>
+        </View>
             <Button style={{
                 backgroundColor: "#027361",
                 paddingHorizontal: 24,
@@ -206,3 +250,42 @@ export default function Apply() {
         </ScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    imageRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    imagePlaceholder: {
+        width: 80,
+        height: 80,
+        backgroundColor: '#ddd',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 4,
+        borderRadius: 10,
+        borderColor: '#027361',
+        borderWidth: 1.5,
+    },
+    image: {
+        width: 80,
+        height: 80,
+        borderRadius: 10,
+    },
+    imageText: {
+        fontSize: 30,
+        color: '#027361',
+    },
+});

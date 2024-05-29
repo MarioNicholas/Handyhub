@@ -11,11 +11,7 @@ export default function Login() {
 
     const loginHandler = async (event: GestureResponderEvent) => {
         event.preventDefault();
-        console.log(username);
-        console.log(password);
         
-    
-
         try {
             const response = await fetch("http://192.168.1.13:8000/auth/login", {
                 method: "POST",

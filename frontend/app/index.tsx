@@ -20,6 +20,8 @@ import Detail, { serviceDetail } from "./Menu/detail";
 import Order from "./Menu/order";
 import { NavigationContainer } from "@react-navigation/native";
 import Payment from "./Menu/payment";
+import Plumbing from "./Services/plumbing";
+import Cleaning from "./Services/cleaning";
 
 export type MenuStackParams = {
   Home: Screen
@@ -70,6 +72,8 @@ function ServiceStackGroup(){
       <ServiceStack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
       <ServiceStack.Screen name="MenuStack" component={MenuStackGroup} options={{ headerShown: false }} />
       <ServiceStack.Screen name="Electronics" component={Electronics}/>
+      <ServiceStack.Screen name="Plumbing" component={Plumbing}/>
+      <ServiceStack.Screen name="Cleaning" component={Cleaning}/>
       <ServiceStack.Screen name="Gardening" component={Gardening}/>
       <ServiceStack.Screen name="Renovation" component={Renovation}/>
       <ServiceStack.Screen name="Apply" component={Apply} />

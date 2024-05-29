@@ -1,7 +1,9 @@
 import { Link, useRouter } from "expo-router";
 import * as React from "react";
-import { View, Image, ScrollView, GestureResponderEvent } from "react-native";
+import { View, Image, StyleSheet, ScrollView, GestureResponderEvent, TouchableOpacity } from "react-native";
 import { Text, TextInput, Button } from "react-native-paper";
+import * as ImagePicker from 'expo-image-picker';
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Register() {
@@ -11,25 +13,53 @@ export default function Register() {
   const[address, setAddress]=React.useState("")
   const[username, setUsername]=React.useState("")
   const[password, setPassword]=React.useState("")
+  const[image, setImage] = React.useState<(string | null)>("");
+
   const router =useRouter()
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+    });
+
+    if (!result.canceled && result.assets) {
+        setImage(result.assets[0].uri);
+    }
+  };
 
   const signupHandler = async (event: GestureResponderEvent) => {
     event.preventDefault();
-    console.log(name);
+    // Create a new FormData instance
+    const formData = new FormData();
+        
+    // Append service details to formData
+    formData.append('email', email);
+    formData.append('name', name);
+    formData.append('phoneNumber', phoneNumber);
+    formData.append('address', address);
+    formData.append('username', username);
+    formData.append('password', password);
+
+
+    const fileName = image?.split('/').pop();
+    if (fileName) {
+        const fileType = image?.includes('jpg') || image?.includes('jpeg') ? 'image/jpeg' : 'image/png';
     
-    try {
+        formData.append('image', {
+            uri: image,
+            name: fileName,
+            type: fileType,
+            } as any);
+        }
+    try {      
       const response = await fetch("http://192.168.1.13:8000/auth/signup", {
         method: "PUT",
-        body: JSON.stringify({
-          email: email,
-          name: name,
-          phoneNumber: phoneNumber,
-          address: address,
-          username: username,
-          password: password,
-        }),
+        body: formData,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
       if (response.status === 422) {
@@ -126,6 +156,7 @@ export default function Register() {
             width: "90%",
           }}
           onChangeText={(phone)=>setPhoneNumber(phone)}
+          keyboardType='numeric'
           mode="outlined"
         />
         <TextInput
@@ -163,8 +194,22 @@ export default function Register() {
             width: "90%",
           }}
           onChangeText={(password)=>setPassword(password)}
+          secureTextEntry={true}
           mode="outlined"
         />
+
+        <View style={styles.container}>
+            <Text style={styles.title}>Upload Picture</Text>
+            <View style={styles.imageRow}>
+                <TouchableOpacity onPress={() => pickImage()} style={styles.imagePlaceholder}>
+                    {image ? (
+                        <Image source={{ uri: image }} style={styles.image} />
+                    ) : (
+                        <Text style={styles.imageText}>+</Text>
+                    )}
+                </TouchableOpacity>
+            </View>
+        </View>
 
         <Button
           mode="contained"
@@ -191,3 +236,42 @@ export default function Register() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+  },
+  title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginBottom: 20,
+  },
+  imageRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+  },
+  imagePlaceholder: {
+      width: 80,
+      height: 80,
+      backgroundColor: '#ddd',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginHorizontal: 4,
+      borderRadius: 10,
+      borderColor: '#027361',
+      borderWidth: 1.5,
+  },
+  image: {
+      width: 80,
+      height: 80,
+      borderRadius: 10,
+  },
+  imageText: {
+      fontSize: 30,
+      color: '#027361',
+  },
+});

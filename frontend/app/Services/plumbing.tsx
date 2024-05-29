@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { Pressable, SafeAreaView, ScrollView, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
-interface Gardenings{
+interface Plumbing{
     _id: string,
     name: string,
     price: number,
@@ -17,49 +17,49 @@ interface Gardenings{
     specialty: string,
 }
 
-interface GardeningsArray extends Array<Gardenings>{};
+interface PlumbingArray extends Array<Plumbing>{};
 
-export default function Gardenings() {
-    const[gardenings, setGardenings] = React.useState<GardeningsArray>([])
+export default function Plumbing() {
+    const[plumbing, setPlumbing] = React.useState<PlumbingArray>([])
     const[loading, setLoading] = React.useState(true)
     const navigation = useNavigation()
-    async function getGardenings() {        
-        const response = await fetch("http://192.168.1.13:8000/services/Gardenings", {
+    async function getPlumbing() {        
+        const response = await fetch("http://192.168.1.13:8000/services/Plumbing", {
         });
         const result = await response.json();
-        setGardenings(result.services);
+        setPlumbing(result.services);
         setLoading(false)
         }        
         
         React.useEffect(() => {
-            getGardenings();
+            getPlumbing();
         }, [])
     return (
         <SafeAreaView style={{
             paddingHorizontal: 28,
         }}>
-            {!loading && gardenings ? 
+            {!loading && plumbing ? 
             <ScrollView>
                 <Text variant='displaySmall' style={{
                     fontWeight: "bold",
                     marginVertical: 20
                 }}>
-                    Gardenings
+                    Plumbing
                 </Text>
-                {gardenings.map((gardening) => (
+                {plumbing.map((p) => (
                         <Pressable style={{
                             marginVertical: 8
-                        }} key={gardening._id} onPress={() => {
+                        }} key={p._id} onPress={() => {
                             navigation.push("MenuStack", {screen: "Detail", params: {
-                                id:gardening._id
+                                id:p._id
                             }})
                         }}>
-                            <Card props={gardening}/>
+                            <Card props={p}/>
                         </Pressable>
                     )                    
                 )}
             </ScrollView>
-            : !gardenings ?
+            : !plumbing ?
             <Text>There is no service available right now</Text>
             : 
             <Text>Loading</Text>

@@ -62,7 +62,12 @@ export default function Gardening() {
             </ScrollView>
         </SafeAreaView>
         )
-    } else {
+    } else if (!renovations) {
+        return (
+            <Text>There is no service available right now</Text>
+        )
+    }
+    else {
         return (
             <Text>Loading...</Text>
         )

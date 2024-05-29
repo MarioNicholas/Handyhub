@@ -11,6 +11,7 @@ export default function HistoryCard({props}: any) {
     // const date = oldDate.getDate()
 
     // const newDate = `${date} ${month} ${year} `
+    
     return (
         <View style={{
             display: "flex",
@@ -19,16 +20,16 @@ export default function HistoryCard({props}: any) {
             borderColor:"#027361",
             borderRadius:10,
         }}>
-            <Image source={props?.image} style={{width: 120, height: 120}}/>
+            <Image src={`http://192.168.1.13:8000/images/${props?.image}`} style={{width: 120, height: 120, marginRight: 12}}/>
             <View style={{
             
             }}>
-            <View style={{paddingRight: 12, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems:"center"}}>
-                <Text variant="titleMedium" style={{fontWeight: 'bold', marginTop: 8, marginHorizontal: 12}}>{props.providerName}</Text>
+            <View style={{paddingRight: 12, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems:"center", backgroundColor: "yellow"}}>
+                <Text variant="titleMedium" style={{fontWeight: 'bold', marginTop: 8}}>{props.providerName}</Text>
                 {props.status === "Scheduled" ? 
-                <Text variant="titleMedium" style={{fontWeight: "bold", color: `#E8451E`}}>{props.status}</Text>
+                <Text variant="titleMedium" style={{fontWeight: "bold", marginTop: 8, color: `#E8451E`}}>{props.status}</Text>
                 : 
-                <Text variant="titleMedium" style={{fontWeight: "bold", color: `#027361`}}>{props.status}</Text>
+                <Text variant="titleMedium" style={{fontWeight: "bold", marginTop: 8, color: `#027361`}}>{props.status}</Text>
             }
             </View>
             <Text variant="titleSmall" style={{fontWeight: "200", marginHorizontal: 12}}>{oldDate}</Text>

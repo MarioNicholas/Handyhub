@@ -19,13 +19,8 @@ export default function Confirmed() {
             <View style={styles.container}>
                 <Image source={confirmImage} style={styles.image} />
                 <Text style={styles.message}>Your Order Has Been Confirmed</Text>
-                <Link href={"/"} style={styles.button}>
-                    <Text style={{
-                        color: "white",
-                    }}>
-                        Go To Home
-                    </Text>
-                </Link>
+                <Button style={styles.button} onPress={()=>{navigation.navigate("Login" as never)}}><Text style={{color: "white"}}>Go To Home</Text></Button>
+
             </View>
         </SafeAreaView>
     );

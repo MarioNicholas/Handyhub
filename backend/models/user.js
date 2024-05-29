@@ -32,7 +32,10 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectID,
       ref: "Service",
     }
-  ]
+  ],
+  image: {
+    type: String
+  }
 });
 
 // userSchema.methods.addToCart = function(product) {

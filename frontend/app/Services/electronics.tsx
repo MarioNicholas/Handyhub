@@ -8,6 +8,7 @@ import { Text } from 'react-native-paper'
 
 interface Electronics{
     _id: string,
+    images: string
     name: string,
     price: number,
     description: string,
@@ -34,11 +35,13 @@ export default function Electronics() {
         React.useEffect(() => {
             getElectronics();
         }, [])
+    console.log(electronics);
+    
     return (
         <SafeAreaView style={{
             paddingHorizontal: 28,
         }}>
-            {!loading ? 
+            {!loading && electronics ? 
             <ScrollView>
                 <Text variant='displaySmall' style={{
                     fontWeight: "bold",
@@ -46,7 +49,10 @@ export default function Electronics() {
                 }}>
                     Electronics
                 </Text>
-                {electronics.map((electronic) => (
+                {electronics.map((electronic) => {
+                    console.log(electronic.images[0]);
+                    
+                    return (
                         <Pressable style={{
                             marginVertical: 8
                         }} key={electronic._id} onPress={() => {
@@ -57,8 +63,10 @@ export default function Electronics() {
                             <Card props={electronic}/>
                         </Pressable>
                     )                    
-                )}
+                })}
             </ScrollView>
+            : !electronics ?
+            <Text>There is no service available right now</Text>
             : 
             <Text>Loading</Text>
             }

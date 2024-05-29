@@ -5,8 +5,10 @@ import AddressCard from '@/components/AddressCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import Login from '../Menu/login';
+import Card from '@/components/Card';
 
 interface userProfile {
+  image: string
   username: string;
   name: string;
   phoneNumber: string;
@@ -18,7 +20,7 @@ export default function Profile() {
   const avatar = require("@/assets/images/Bob.png");
   const [loading, setLoading] = useState(true);
   const [user,setUser] = React.useState<userProfile>({
-    username:"",name:"",phoneNumber:"",email:"",address:"",
+    image: "",username:"",name:"",phoneNumber:"",email:"",address:"",
   });
   const navigation = useNavigation()
 
@@ -34,7 +36,6 @@ export default function Profile() {
         },
     });
     const result = await response.json();
-    console.log(result)
     setUser(result.user);
     setLoading(false)
   }
@@ -42,6 +43,8 @@ export default function Profile() {
   React.useEffect(() => {
     getProfile();
   }, [])
+  console.log(user);
+  
 
   if(!loading && user) {
     return (
@@ -57,7 +60,11 @@ export default function Profile() {
             paddingTop: 20,
             marginBottom: 20,
           }}>
-            <Image source={avatar} style={{borderRadius: 30}}/>
+            {user.image ? 
+              <Image src={`http://192.168.1.13:8000/images/${user.image}`} style={{borderRadius: 30, width: 300, height: 300, objectFit: "cover"}}/>
+            : 
+              <Image source={avatar} style={{borderRadius: 30, width: 300, height: 300, objectFit: "cover"}}/>
+            }
           </View>
           <Text variant='displaySmall' style={{
             color: "#027361",
@@ -120,35 +127,11 @@ export default function Profile() {
               borderBottomColor: "#3E5155",
               borderBottomWidth: 1,
             }}>{user.address}</Text>
-
-            {/* <View style={{
-              display:"flex",
-              flex: 2,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 12,
-            }}>
-              <Text variant='bodyMedium' style={{
-                color: "#3E5155",
-                fontWeight: "bold",
-              }}>Address List</Text>
-              <Button style={{
-                backgroundColor: "#027361",
-                paddingHorizontal: 8,
-                paddingVertical: 2
-              }}>
-                <Text style={{
-                  color: "white"
-                }}>Add Address</Text>
-              </Button>
-            </View>
-            {/* list address */}
-            {/* {address.map((item)=>{
-              return (
-                <AddressCard props={item} key={item.name}/>
-              )
-            })} */}
+            <Text variant='bodyMedium' style={{
+              color: "#3E5155",
+              fontWeight: "bold",
+            }}>My Services</Text>
+            <Card />
           </View>
 
       </ScrollView>

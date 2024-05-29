@@ -11,10 +11,6 @@ export default function FavouriteCard({props}: any) {
 
     const navigation = useNavigation()
     
-    const redirectHandler = () => {
-
-    }
-
     return (
         <SafeAreaView style={{
             display: "flex",
@@ -25,7 +21,7 @@ export default function FavouriteCard({props}: any) {
         }}
             
         >
-            <Image source={props?.image} style={{width: 120, height: 120}}/>
+            <Image src={`http://192.168.1.13:8000/images/${props?.images}`} style={{width: 120, height: 120}}/>
             <View style={{
 
             }}>

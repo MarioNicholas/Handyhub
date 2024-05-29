@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 interface History {
   service: {
+    image: string,
     provider: {
       name:string
     }
@@ -37,11 +38,11 @@ export default function History() {
         Authorization : `Bearer ${token}`,
       },
     });
-    const result = await response.json();
-    const history = result.orders.map((item: any) => {return {providerName : item.serviceId.provider.name, amount: item.amount, date: item.serviceDate, status: item.status, rating: 5}} )
+    const result = await response.json();    
+    const history = result.orders.map((item: any) => {return {providerName : item.serviceId.provider.name, amount: item.amount, date: item.serviceDate, status: item.status, rating: 5, image: item.serviceId.images}} )
     setHistoryOrder(history);
     setLoading(false)
-  }
+  }  
 
   React.useEffect(()=>{
     getHistory()

@@ -43,7 +43,6 @@ const paymentMethods = [
             }
 
             const result = await response.json();
-            console.log(result);
             navigation.navigate("Home" as never);
         } catch (err) {
             console.error("Error while placing order:", err);

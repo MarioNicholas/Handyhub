@@ -39,13 +39,12 @@ export default function Navbar() {
             setToken(null);
             setUserId(null);
             setIsAuth(false);
+            router.replace("/")
         };
         
     const navigateToAuth = () => {
         {isAuth ? logoutHandler() : router.push('Menu/login')}
     };
-
-    
 
     return (
         // <View style={{ flex: 1, backgroundColor: "red", maxHeight: 103 }}>

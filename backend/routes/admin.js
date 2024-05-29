@@ -3,14 +3,16 @@ const path = require('path');
 const express = require('express');
 
 const adminController = require('../controllers/admin');
+const fileUpload = require("../middleware/file-upload")
 const isAuth = require('../middleware/is-auth');
 
 
 const router = express.Router();
 
-router.post("/add-service", isAuth, adminController.addService)
+router.post("/add-service", isAuth, fileUpload.array("images",4),adminController.addService)
 router.delete("/delete-service/:serviceID", isAuth,adminController.deleteService)
 router.patch('/edit-service/:serviceID', isAuth, adminController.editService)
+router.patch('/service', isAuth, adminController.getService)
 
 // /admin/add-product => GET
 // router.get('/add-product', adminController.getAddProduct);

@@ -7,6 +7,7 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 
 interface Service{
   _id: string,
+  images: string,
   name: string,
   price: number,
   description: string,

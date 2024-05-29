@@ -30,6 +30,7 @@ type Props = NativeStackScreenProps<MenuStackParams, "Detail">
 
 export type serviceDetail = {
   _id: string,
+  images: [string]
   name: string,
   price: number,
   description: string,
@@ -62,11 +63,11 @@ const Detail : React.FC<Props>= ({route}) => {
     { title: 'Image 2', uri: DetailPlaceholder },
     { title: 'Image 3', uri: DetailPlaceholder },
     { title: 'Image 4', uri: DetailPlaceholder },
-  ];
+  ];  
 
   const [loading, setLoading] = useState(true);
   const [service,setService] = React.useState<serviceDetail>({
-    _id: "", name: "", price:0, description: "", city: "", provider:{_id:"", name:""}, category: {name:""}, specialty:"",jobs:0,
+    _id: "", images: [""], name: "", price:0, description: "", city: "", provider:{_id:"", name:""}, category: {name:""}, specialty:"",jobs:0,
   });
   const [isFavorite, setIsFavorite] = useState(route.params.isFavourite || false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -75,8 +76,7 @@ const Detail : React.FC<Props>= ({route}) => {
   const [userReview, setUserReview] = useState<ReviewArray>([]);
   const [isSubmit, setIsSubmit] = useState(false)
   const [isDeleted, setIsDeleted] = useState(false)
-  const [user, setUser] = useState<userProfile>({username:"",name:"",phoneNumber:"",email:"",address:"",id:""})
-  
+  const [user, setUser] = useState<userProfile>({username:"",name:"",phoneNumber:"",email:"",address:"",id:""})  
   async function getServiceDetail() {    
 
     const response = await fetch(`http://192.168.1.13:8000/service/${route.params.id}`);
@@ -85,7 +85,6 @@ const Detail : React.FC<Props>= ({route}) => {
     const reviewResult = await reviewResponse.json();
     setService(result.service);
     setUserReview(reviewResult.review);
-    console.log(reviewResult);
     setLoading(false)
   }
   
@@ -115,7 +114,6 @@ const Detail : React.FC<Props>= ({route}) => {
         })
         if (response.ok!) {
           setIsFavorite(true)
-          console.log("berhasil") 
         }
       }
       if (isFavorite) {
@@ -154,7 +152,6 @@ const Detail : React.FC<Props>= ({route}) => {
       const result = await response.json()
       setModalVisible(false)
       setIsSubmit(!isSubmit)
-      console.log(result)
     } catch (err) {
       console.log(err)
     }
@@ -169,7 +166,6 @@ const Detail : React.FC<Props>= ({route}) => {
       }
       const result = await response.json();
       setIsDeleted(!isDeleted)
-      console.log(result);
     } catch (error) {
       console.log(error);
     }
@@ -187,7 +183,6 @@ const Detail : React.FC<Props>= ({route}) => {
         },
     });
     const result = await response.json();
-    console.log(result)
     setUser(result.user);
     setLoading(false)
   }
@@ -204,12 +199,14 @@ const Detail : React.FC<Props>= ({route}) => {
         autoplay
         loop
       >
-        {entries.map((item, index) => (
+        {service.images.map((item, index) => {
+          return (
           <View key={index} style={styles.carouselItem}>
-            <Image source={DetailPlaceholder} style={styles.carouselImage} />
-            <Text style={styles.carouselTitle}>{item.title}</Text>
+            <Image src={`http://192.168.1.13:8000/images/${item}`} style={styles.carouselImage} />
           </View>
-        ))}
+          )
+        }
+        )}
       </Swiper>
       <View style={styles.profileSection}>
         <View style={styles.header}>

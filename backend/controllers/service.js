@@ -32,6 +32,7 @@ exports.getProfile = async (req, res, next) => {
       email: user.email,
       username: user.username,
       address: user.address,
+      image: user.image
     };
     res.status(200).json({ user: userProfile });
   } catch (err) {
@@ -47,7 +48,11 @@ exports.getServices = (req, res, next) => {
     .populate("provider")
     .populate("category")
     .then((services) => {
-      res.status(200).json({ message: "Successful", services: services });
+      const modifiedService = services.map((service) => ({
+        ...service._doc,
+        images: service.images.length > 0 ? [service.images[0]] : []
+      }));
+      res.status(200).json({ message: "Successful", services: modifiedService });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -71,7 +76,11 @@ exports.getServicesByCategory = async (req, res, next) => {
       .populate("provider")
       .populate("category")
       .exec();
-    res.status(200).json({ services: services });
+    const modifiedService = services.map((service) => ({
+        ...service._doc,
+        images: service.images.length > 0 ? [service.images[0]] : []
+      }));
+    res.status(200).json({ message: "Successful", services: modifiedService });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;

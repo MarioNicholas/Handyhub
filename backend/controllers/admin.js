@@ -6,7 +6,7 @@ const Service = require("../models/service");
 
 exports.addService = (req, res, next) => {
   const name = req.body.name;
-  const price = req.body.price;
+  const price = parseFloat(req.body.price);
   const description = req.body.description;
   const city = req.body.city;
   const userId = req.userId;
@@ -14,6 +14,7 @@ exports.addService = (req, res, next) => {
   const specialty = req.body.specialty;
   const jobs = 0;
   const rating = 0.0;
+  const images = req.files.map(file => file.filename)
 
   Category.findOne({ name: category })
     .then((cat) => {
@@ -32,6 +33,7 @@ exports.addService = (req, res, next) => {
         specialty: specialty,
         jobs: jobs,
         rating: rating,
+        images: images,
       });
       return newService.save();
     })
@@ -83,7 +85,6 @@ exports.deleteService = (req, res, next) => {
     const serviceID = req.params.serviceID;
     const userId = req.userId;
 
-
     Service.findOne({_id : serviceID})
     .then((service) => {
       if (!service) {
@@ -99,6 +100,13 @@ exports.deleteService = (req, res, next) => {
       }
       return Service.findByIdAndRemove(serviceID);
     })
+    .then(() => {
+
+      return Review.deleteMany({serviceId :serviceID})
+    })
+    .then(() => {
+      return Order.deleteMany({serviceId : serviceID})
+    })
     .then(()=>{
       res.status(200).json({ message: "Service Deleted" });
     })
@@ -109,6 +117,31 @@ exports.deleteService = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getService = async (req,res,next) => {
+  const userId = req.userId;
+  try {
+    const service = await Service.find({provider: userId})
+    .populate("provider")
+    .populate("category")
+    .exec()
+
+    if (!service) {
+      res.status(200).json({service: [], message: "No Services"})
+    }
+
+    const modifiedService = services.map((service) => ({
+      ...service._doc,
+      images: service.images.length > 0 ? [service.images[0]] : []
+    }));
+    res.status(200).json({ message: "Successful", services: modifiedService });
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+}
 
 // exports.getAddProduct = (req, res, next) => {
 //   res.render('admin/edit-product', {
