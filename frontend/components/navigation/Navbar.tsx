@@ -30,7 +30,7 @@ export default function Navbar() {
         
         React.useEffect(() => {
             tokenChecker();
-        }, []);
+        }, [userId]);
 
         const logoutHandler = async () => {
             await AsyncStorage.removeItem("token");
@@ -39,8 +39,6 @@ export default function Navbar() {
             setToken(null);
             setUserId(null);
             setIsAuth(false);
-            console.log("crotz");
-            
         };
         
     const navigateToAuth = () => {

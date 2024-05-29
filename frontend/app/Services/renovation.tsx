@@ -1,7 +1,8 @@
 import Card from '@/components/Card'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, View } from 'react-native'
+import { Pressable, SafeAreaView, ScrollView, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 interface Renovations{
@@ -32,6 +33,8 @@ export default function Gardening() {
             getRenovations();
         }, [])
 
+    const navigation = useNavigation()
+
     if(!loading){
         return (
         <SafeAreaView style={{
@@ -45,11 +48,15 @@ export default function Gardening() {
                     Renovations
                 </Text>
                 {renovations.map((renovation) => (
-                    <View style={{
-                        marginVertical: 8
-                    }}>
-                        <Card props={renovation} key={renovation._id}/>
-                    </View>
+                        <Pressable style={{
+                            marginVertical: 8
+                        }} key={renovation._id} onPress={() => {
+                            navigation.push("MenuStack", {screen: "Detail", params: {
+                                id:renovation._id
+                            }})
+                        }}>
+                            <Card props={renovation}/>
+                        </Pressable>
                     )                    
                 )}
             </ScrollView>

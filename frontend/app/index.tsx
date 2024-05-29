@@ -16,23 +16,49 @@ import Gardening from "./Services/gardening";
 import Electronics from "./Services/electronics";
 import Renovation from "./Services/renovation";
 import Confirmed from "./Menu/confirmed";
-import Detail from "./Menu/detail";
+import Detail, { serviceDetail } from "./Menu/detail";
 import Order from "./Menu/order";
 import { NavigationContainer } from "@react-navigation/native";
+import Payment from "./Menu/payment";
+
+export type MenuStackParams = {
+  Home: Screen
+  Login: Screen
+  Register: Screen
+  Registered: Screen
+  Detail : {
+    id: string,
+    isFavourite: boolean
+  }
+  Order: {
+    service: serviceDetail
+  }
+  Payment : {
+    service: serviceDetail,
+    address: string
+    token: string
+    date: string
+  }
+  Confirmed: Screen
+}
+
 
 const Tab = createBottomTabNavigator();
-const MenuStack = createNativeStackNavigator();
+const MenuStack = createNativeStackNavigator<MenuStackParams>();
 const ServiceStack = createNativeStackNavigator();
+const FavouriteStack = createNativeStackNavigator();
+
 
 function MenuStackGroup() {
   return (
     <MenuStack.Navigator>
-      <MenuStack.Screen name="Home" component={Home} />
+      <MenuStack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
       <MenuStack.Screen name="Login" component={Login} />
       <MenuStack.Screen name="Register" component={Register} />
       <MenuStack.Screen name="Registered" component={Registered} />
       <MenuStack.Screen name="Detail" component={Detail} />
       <MenuStack.Screen name="Order" component={Order} />
+      <MenuStack.Screen name="Payment" component={Payment} />
       <MenuStack.Screen name="Confirmed" component={Confirmed} />
     </MenuStack.Navigator>
   );
@@ -48,6 +74,15 @@ function ServiceStackGroup(){
       <ServiceStack.Screen name="Renovation" component={Renovation}/>
       <ServiceStack.Screen name="Apply" component={Apply} />
     </ServiceStack.Navigator>
+  )
+}
+
+function FavouriteStackGroup(){
+  return (
+    <FavouriteStack.Navigator screenOptions={{headerShown: false}}>
+      <FavouriteStack.Screen name="Favourite" component={Favourites} />
+      <FavouriteStack.Screen name="MenuStack" component={MenuStackGroup}/>
+    </FavouriteStack.Navigator>
   )
 }
 
@@ -73,7 +108,7 @@ function TabGroup() {
         />
         <Tab.Screen
           name="Favourites"
-          component={Favourites}
+          component={FavouriteStackGroup}
           options={{
             title: 'Favourites',
             tabBarIcon: ({ color }) => <FontAwesome size={24} name="heart" color={color} />,

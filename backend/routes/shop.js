@@ -9,16 +9,21 @@ const router = express.Router();
 
 router.get("/service", serviceController.getServices);
 router.get("/category", serviceController.getCategory);
-router.get("/orders", isAuth, serviceController.getCategory);
+router.get("/orders", isAuth, serviceController.getOrderById);
 router.get("/profile", isAuth, serviceController.getProfile);
 
 router.get("/service/:serviceID", serviceController.getServiceByID);
 router.get("/services/:categoryName", serviceController.getServicesByCategory);
-// router.post("/service/:serviceID", serviceController.orderService);
+router.post("/service/order", isAuth, serviceController.orderService);
 
-router.get("favorite", isAuth, serviceController.getFavorites);
+router.get("/favorite", isAuth, serviceController.getFavorites);
 router.post("/favorite/:serviceID", isAuth, serviceController.postFavorites);
 router.delete("/favorite/:serviceID", isAuth, serviceController.deleteFavorite);
+
+router.post("/review/:serviceID", isAuth, serviceController.addReview);
+router.get("/review/:serviceID", serviceController.getReview);
+router.delete("/review/:reviewID", isAuth, serviceController.deleteReview)
+
 
 // router.get('/', shopController.getIndex);
 
@@ -34,6 +39,6 @@ router.delete("/favorite/:serviceID", isAuth, serviceController.deleteFavorite);
 
 // router.post('/create-order', shopController.postOrder);
 
-// router.get('/orders', shopController.getOrders);
+// router.get('/orders', serviceController.getOrders);
 
 module.exports = router;

@@ -95,7 +95,9 @@ export default function Login() {
                     width: "90%"
                 }}
                 onChangeText={(password) => setPassword(password)}
-                mode="outlined"/>
+                mode="outlined"
+                secureTextEntry={true}
+                />
 
                 <Button mode="contained" style={{
                     backgroundColor: "#027361",

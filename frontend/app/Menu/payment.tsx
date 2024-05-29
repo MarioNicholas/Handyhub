@@ -1,5 +1,8 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { MenuStackParams } from '..';
+import { useNavigation } from '@react-navigation/native';
 
 const paymentMethods = [
     { id: 'bca', label: 'Transfer BCA', icon: require('@/assets/images/bca.png') },
@@ -9,9 +12,43 @@ const paymentMethods = [
     { id: 'ovo', label: 'OVO',icon: require('@/assets/images/ovo.png') },
     ];
 
-    export default function Payment() {
-    const [selectedMethod, setSelectedMethod] = useState('qris');
+    type Props = NativeStackScreenProps<MenuStackParams, "Payment">
 
+    const Payment : React.FC<Props> = ({route}) => {
+    const [selectedMethod, setSelectedMethod] = useState('qris');
+    
+    const navigation = useNavigation()
+    const paymentHandler = async () => {
+        const orderData = {
+            serviceID: route.params.service._id,
+            amount: route.params.service.price + 10000,
+            paymentMethod: selectedMethod,
+            address: route.params.address,
+            serviceDate: route.params.date,
+        };
+
+        try {
+            const response = await fetch("http://192.168.1.13:8000/service/order", {
+                method: "POST",
+                body: JSON.stringify(orderData),
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + route.params.token,
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Error ${response.status}: ${errorData.message}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+            navigation.navigate("Home" as never);
+        } catch (err) {
+            console.error("Error while placing order:", err);
+        }
+    };
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.header}>Payment Method</Text>
@@ -34,25 +71,27 @@ const paymentMethods = [
         <View style={styles.paymentDetail}>
             <Text style={styles.header}>Payment Detail</Text>
             <View style={styles.detailRow}>
-            <Text>Rate (x2)</Text>
-            <Text>Rp 500.000/Hour</Text>
+            <Text>Rate</Text>
+            <Text>{route.params.service.price}</Text>
             </View>
             <View style={styles.detailRow}>
             <Text>Service Fee</Text>
-            <Text>Rp 25.000</Text>
+            <Text>Rp 10000</Text>
             </View>
             <View style={styles.detailRow}>
             <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalAmount}>Rp 1.025.000</Text>
+            <Text style={styles.totalAmount}>{route.params.service.price + 10000}</Text>
             </View>
         </View>
 
-        <TouchableOpacity style={styles.confirmButton}>
+        <TouchableOpacity style={styles.confirmButton} onPress={paymentHandler}>
             <Text style={styles.confirmButtonText}>Confirm Order</Text>
         </TouchableOpacity>
         </ScrollView>
     );
     }
+export default  Payment
+
 
     const styles = StyleSheet.create({
     container: {

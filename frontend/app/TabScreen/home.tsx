@@ -51,11 +51,7 @@ export default function Home() {
 
     React.useEffect(() => {
         tokenChecker();
-    }, []);
-
-    // React.useEffect(() => {
-    //     setRefreshKey(prevKey => prevKey + 1);
-    // }, [isAuth]);
+    }, [userId]);
 
     const logoutHandler = async () => {
         await AsyncStorage.removeItem("token");
@@ -68,9 +64,8 @@ export default function Home() {
 
     const navigation = useNavigation()
 
-    const navigationHandler = (href: string) => {
-        navigation.push("Electronics")
-    }
+    console.log(token);
+    
 
     return (
         <ScrollView
@@ -116,7 +111,6 @@ export default function Home() {
             justifyContent: "space-between"}}>
             {services.map((service)=> {
             return (
-                <Link href={`Services/${service.name.toLowerCase()}`} key={service.name}>
                 <Pressable style={{
                     display: "flex",
                     justifyContent: "center",
@@ -125,7 +119,8 @@ export default function Home() {
                     overflow: "visible",
                     width: 70,
                     height: 80,
-                }} onPress={() => navigationHandler(`Services/${service.name.toLowerCase()}`)}>
+                }} onPress={() => navigation.push(`${service.name}`)}
+                    key={service.name}>
                     <Image source={service.src} style={{
                         
                     }}/>
@@ -133,7 +128,6 @@ export default function Home() {
                         fontWeight: "bold",
                     }}>{service.name}</Text>
                 </Pressable>
-                </Link>
             )
             })}
             </View>
@@ -145,8 +139,6 @@ export default function Home() {
         <Text variant="headlineLarge" style={{fontWeight: 'bold', marginTop: 20, marginBottom: 10}}>Featured</Text>
             <Card name="Alan Smith" image={FeaturedPlaceholder} role="Hedge Specialist" rating={4.9} jobs={120} price={120000}/>      
         </View>
-        <Link href={"../Menu/detail"}>confirm</Link>
-        <Link href={"../Menu/order"}>order</Link>
         </ScrollView>
     );
 }

@@ -34,29 +34,15 @@ export default function Profile() {
         },
     });
     const result = await response.json();
+    console.log(result)
     setUser(result.user);
     setLoading(false)
   }
-
-  console.log(user);
-
 
   React.useEffect(() => {
     getProfile();
   }, [])
 
-  const address=[
-    {
-      name: "Home",
-      phone: "0812345679",
-      address: "Jalan Genteng No 123 RT 1 / RW 2, Kelurahan A, Kecamatan B, 40131, Bandung, Jawa Barat",
-    },
-    {
-      name: "Kos",
-      phone: "0812345679",
-      address: "Jalan Genteng No 123 RT 1 / RW 2, Kelurahan A, Kecamatan B, 40131, Bandung, Jawa Barat",
-    }
-  ]
   if(!loading && user) {
     return (
       <ScrollView style={{
@@ -123,7 +109,19 @@ export default function Profile() {
             {/* password?! */}
 
             {/* address list title */}
-            <View style={{
+
+            <Text variant='bodyMedium' style={{
+              color: "#3E5155",
+              fontWeight: "bold",
+            }}>Address</Text>
+            <Text variant='titleMedium' style={{
+              color: "#3E5155",
+              marginBottom: 20,
+              borderBottomColor: "#3E5155",
+              borderBottomWidth: 1,
+            }}>{user.address}</Text>
+
+            {/* <View style={{
               display:"flex",
               flex: 2,
               flexDirection: "row",
@@ -146,11 +144,11 @@ export default function Profile() {
               </Button>
             </View>
             {/* list address */}
-            {address.map((item)=>{
+            {/* {address.map((item)=>{
               return (
                 <AddressCard props={item} key={item.name}/>
               )
-            })}
+            })} */}
           </View>
 
       </ScrollView>

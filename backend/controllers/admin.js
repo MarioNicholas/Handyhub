@@ -9,8 +9,11 @@ exports.addService = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
   const city = req.body.city;
-  const provider = req.userId;
+  const userId = req.userId;
   const category = req.body.category;
+  const specialty = req.body.specialty;
+  const jobs = 0;
+  const rating = 0.0;
 
   Category.findOne({ name: category })
     .then((cat) => {
@@ -24,8 +27,11 @@ exports.addService = (req, res, next) => {
         price: price,
         description: description,
         city: city,
-        provider: Types.ObjectId(provider),
+        provider: userId,
         category: cat._id,
+        specialty: specialty,
+        jobs: jobs,
+        rating: rating,
       });
       return newService.save();
     })
@@ -40,6 +46,8 @@ exports.addService = (req, res, next) => {
     });
 };
 
+// "message": "Service validation failed: provider: Path `provider` is required."
+
 exports.editService = (req, res, next) => {
   const {
     body,
@@ -53,8 +61,8 @@ exports.editService = (req, res, next) => {
       throw error;
     }
 
-    if (service.provider.toString() !== userId) {
-      const error = new Error ("You do not have access to this servce")
+    if (service.provider.toString() !== req.userId) {
+      const error = new Error ("You do not have access to this service")
       error.statusCode = 403; 
       throw error;
     }
@@ -85,7 +93,7 @@ exports.deleteService = (req, res, next) => {
       }
 
       if (service.provider.toString() !== userId) {
-        const error = new Error ("You do not have access to this servce")
+        const error = new Error ("You do not have access to this service")
         error.statusCode = 403;
         throw error;
       }

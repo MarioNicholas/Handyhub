@@ -11,6 +11,10 @@ const transactionSchema = new Schema({
     type: Date,
     required: true
   },
+  serviceDate: {
+    type : Date,
+    required: true
+  },
   paymentMethod: {
     type: String,
     required: true

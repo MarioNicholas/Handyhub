@@ -22,17 +22,14 @@ interface ElectronicsArray extends Array<Electronics>{};
 export default function Electronics() {
     const[electronics, setElectronics] = React.useState<ElectronicsArray>([])
     const[loading, setLoading] = React.useState(true)
-    const navigation : any  = useNavigation()
+    const navigation = useNavigation()
     async function getElectronics() {        
         const response = await fetch("http://192.168.1.13:8000/services/Electronics", {
         });
         const result = await response.json();
         setElectronics(result.services);
         setLoading(false)
-        }
-        
-        console.log(electronics);
-        
+        }        
         
         React.useEffect(() => {
             getElectronics();
@@ -53,7 +50,9 @@ export default function Electronics() {
                         <Pressable style={{
                             marginVertical: 8
                         }} key={electronic._id} onPress={() => {
-                            navigation.push("MenuStack", {screen: "Detail", id: electronic._id})
+                            navigation.push("MenuStack", {screen: "Detail", params: {
+                                id:electronic._id
+                            }})
                         }}>
                             <Card props={electronic}/>
                         </Pressable>
