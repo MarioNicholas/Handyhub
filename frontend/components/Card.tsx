@@ -8,6 +8,9 @@ export default function Card({props}: any) {
     // if(props.image){
     //     setImage(props.image)
     // }
+
+    console.log(props);
+    
     
     return (
         <View style={{

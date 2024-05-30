@@ -3,7 +3,8 @@ import { Text } from 'react-native-paper';
 import { View, Image, Pressable } from "react-native";
 import FavouriteCard from '@/components/FavouriteCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 interface Service{
   _id: string,
@@ -23,11 +24,13 @@ export default function Favourites() {
   const [loading, setLoading] = React.useState(true);
   const [favoriteItem, setFavoriteItem] = React.useState<ServiceArray>([]);
   const navigation = useNavigation()
+  const router = useRouter()
 
   const getFavoriteServices = async () => {
     const token = await AsyncStorage.getItem("token")
     if (!token) {
       //redirect to login
+      router.push("Menu/login")
     }
 
     try {

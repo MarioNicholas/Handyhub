@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { ScrollView, View, GestureResponderEvent, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import { Button, RadioButton, Text, TextInput } from 'react-native-paper'
@@ -16,10 +16,13 @@ export default function Apply() {
     const[token, setToken] = useState<string|null>("")
     const [images, setImages] = useState<(string | null)[]>([null, null, null, null]);
     
+    const router = useRouter()
+
     const tokenChecker = async () => {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
             //route ke login
+            router.push("Menu/login")
         }
 
         setToken(token);

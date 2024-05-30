@@ -52,6 +52,14 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+  const errors = expressValidator.validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+  
   const username = req.body.username;
   const password = req.body.password;
   let loadedUser;

@@ -6,6 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MenuStackParams } from '..';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 
 type Props = NativeStackScreenProps<MenuStackParams, "Order">
 
@@ -21,6 +22,7 @@ const Order : React.FC<Props> = ({route}) => {
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState<string|null>("");
     const [orderAddress, setOrderAddress] = useState("halo")
+    const router = useRouter()
 
     const [user,setUser] = React.useState<userProfile>({
         username:"",name:"",phoneNumber:"",email:"",address:"",
@@ -29,7 +31,7 @@ const Order : React.FC<Props> = ({route}) => {
     async function getProfile() {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
-            navigation.navigate("Login" as never);
+            router.push("Menu/login");
         }
         const response = await fetch("http://192.168.1.13:8000/profile", {
             headers: {

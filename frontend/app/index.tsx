@@ -49,6 +49,7 @@ const Tab = createBottomTabNavigator();
 const MenuStack = createNativeStackNavigator<MenuStackParams>();
 const ServiceStack = createNativeStackNavigator();
 const FavouriteStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 
 
 function MenuStackGroup() {
@@ -90,6 +91,15 @@ function FavouriteStackGroup(){
   )
 }
 
+function ProfileStackGroup(){
+  return (
+    <ProfileStack.Navigator screenOptions={{headerShown: false}}>
+      <ProfileStack.Screen name="Profile" component={Profile} />
+      <ProfileStack.Screen name="MenuStack" component={MenuStackGroup}/>
+    </ProfileStack.Navigator>
+  )
+}
+
 function TabGroup() {
   return (
     <>
@@ -111,7 +121,7 @@ function TabGroup() {
           }}
         />
         <Tab.Screen
-          name="Favourites"
+          name="FavouritesStackGroup"
           component={FavouriteStackGroup}
           options={{
             title: 'Favourites',
@@ -127,8 +137,8 @@ function TabGroup() {
           }}
         />
         <Tab.Screen
-          name="Profile"
-          component={Profile}
+          name="ProfileStackGroup"
+          component={ProfileStackGroup}
           options={{
             title: 'Profile',
             tabBarIcon: ({ color }) => <FontAwesome size={24} name="user" color={color} />,

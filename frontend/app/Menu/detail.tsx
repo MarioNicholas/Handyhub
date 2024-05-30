@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, ScrollView, Image, StyleSheet, Dimensions, Pressable, GestureResponderEvent } from 'react-native';
 import { Text, Button, Avatar, Card, IconButton, Portal, Modal, TextInput, PaperProvider } from 'react-native-paper';
 import Swiper from 'react-native-swiper';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MenuStackParams } from '..';
@@ -77,6 +77,8 @@ const Detail : React.FC<Props>= ({route}) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const [isDeleted, setIsDeleted] = useState(false)
   const [user, setUser] = useState<userProfile>({username:"",name:"",phoneNumber:"",email:"",address:"",id:""})  
+  const router = useRouter()
+  
   async function getServiceDetail() {    
 
     const response = await fetch(`http://192.168.1.13:8000/service/${route.params.id}`);
@@ -99,6 +101,7 @@ const Detail : React.FC<Props>= ({route}) => {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         //redirect ke login
+        router.push("Menu/login")
       }
 
       if (!isFavorite) {
@@ -126,10 +129,27 @@ const Detail : React.FC<Props>= ({route}) => {
     }
   }  
 
+  const modalHandler = async (event: GestureResponderEvent) => {
+    event.preventDefault()
+    try {
+    const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        //redirect ke login
+        router.push("Menu/login")
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const addReviewHandler = async (event: GestureResponderEvent) => {
     event.preventDefault();
     try {
       const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        //redirect ke login
+        router.push("Menu/login")
+      }
       const response = await fetch(`http://192.168.1.13:8000/review/${route.params.id}`, {
           method: "POST",
           body: JSON.stringify({
@@ -229,10 +249,14 @@ const Detail : React.FC<Props>= ({route}) => {
       <View style={styles.reviewSection}>
         <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexDirection: "row" }}>
           <Text style={styles.reviewTitle}>Reviews:</Text>
-          <Button mode='contained' buttonColor='#027361' onPress={() => setModalVisible(true)}><Text style={{ color: "white" }}>Write a Review</Text></Button>
+          {user.id !== service.provider._id && (
+          <Button mode='contained' buttonColor='#027361' onPress={modalHandler}>
+            <Text style={{ color: "white" }}>Write a Review</Text>
+            </Button>
+          )}
         </View>
         <Pressable style={styles.viewAllText}>
-          <Text>View All</Text>
+          <Text style={{color: "#027361"}}>View All</Text>
         </Pressable>
         {userReview?.map((review) => (
           <Card style={styles.reviewCard}>
@@ -252,10 +276,12 @@ const Detail : React.FC<Props>= ({route}) => {
         )}
       </View>
       <View style={styles.buttonContainer}>
-        <Button mode="contained" style={styles.chatButton} onPress={() => {}}>Chat</Button>
-        <Button mode="contained" style={styles.bookButton} onPress={() => {
-          navigation.push("MenuStack", {screen: "Order", params:{service}})
-        }}>Book</Button>
+        {/* <Button mode="contained" style={styles.chatButton} onPress={() => {}}>Chat</Button> */}
+        {user.id !== service.provider._id &&(
+          <Button mode="contained" style={styles.bookButton} onPress={() => {
+            navigation.push("MenuStack", {screen: "Order", params:{service}})
+          }}>Book</Button>)
+        }
       </View>
     </ScrollView>
       : 
@@ -322,14 +348,17 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: 'black'
   },
   profileDetails: {
     fontSize: 16,
     marginVertical: 2,
+    color: "black"
   },
   profileDescription: {
     fontSize: 16,
     marginVertical: 8,
+    color: "black"
   },
   reviewSection: {
     marginVertical: 16,
@@ -337,6 +366,7 @@ const styles = StyleSheet.create({
   reviewTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: "#027361"
   },
   viewAllText: {
     fontSize: 16,

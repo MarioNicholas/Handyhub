@@ -1,10 +1,21 @@
 const { Types } = require("mongoose");
 const Category = require("../models/category");
 const Service = require("../models/service");
+const Review = require("../models/review")
+const Order = require("../models/order")
+const fs = require("fs");
+const path = require("path");
 
 // const Product = require('../models/product');
 
 exports.addService = (req, res, next) => {
+  const errors = expressValidator.validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
   const name = req.body.name;
   const price = parseFloat(req.body.price);
   const description = req.body.description;
@@ -14,7 +25,7 @@ exports.addService = (req, res, next) => {
   const specialty = req.body.specialty;
   const jobs = 0;
   const rating = 0.0;
-  const images = req.files.map(file => file.filename)
+  const images = req.files.map((file) => file.filename);
 
   Category.findOne({ name: category })
     .then((cat) => {
@@ -38,7 +49,7 @@ exports.addService = (req, res, next) => {
       return newService.save();
     })
     .then((result) => {
-      res.status(201).json({ message: "Service Added"});
+      res.status(201).json({ message: "Service Added" });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -51,41 +62,27 @@ exports.addService = (req, res, next) => {
 // "message": "Service validation failed: provider: Path `provider` is required."
 
 exports.editService = (req, res, next) => {
-  const {
-    body,
-    params : {serviceID},
-  } = req;
-  Service.findOne({_id: serviceID})
-  .then((service) => {
-    if (!service) {
-      const error = new Error("Service not found");
-      error.statusCode = 404;
-      throw error;
-    }
+  const errors = expressValidator.validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+  const name = req.body.name;
+  const price = parseFloat(req.body.price);
+  const description = req.body.description;
+  const specialty = req.body.specialty;
+  const serviceID = req.params.serviceID
 
-    if (service.provider.toString() !== req.userId) {
-      const error = new Error ("You do not have access to this service")
-      error.statusCode = 403; 
-      throw error;
-    }
-    return Service.findByIdAndUpdate(serviceID,body,{ new: true });
-  })
-  .then(()=>{
-    res.status(200).json({ message: "Service Updated" });
-  })
-  .catch((err) => {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  });
-};
+  const editedService = {
+    name: name,
+    price: price,
+    description: description,
+    specialty: specialty,
+  }
 
-exports.deleteService = (req, res, next) => {
-    const serviceID = req.params.serviceID;
-    const userId = req.userId;
-
-    Service.findOne({_id : serviceID})
+  Service.findById(serviceID)
     .then((service) => {
       if (!service) {
         const error = new Error("Service not found");
@@ -93,22 +90,15 @@ exports.deleteService = (req, res, next) => {
         throw error;
       }
 
-      if (service.provider.toString() !== userId) {
-        const error = new Error ("You do not have access to this service")
+      if (service.provider.toString() !== req.userId) {
+        const error = new Error("You do not have access to this service");
         error.statusCode = 403;
         throw error;
       }
-      return Service.findByIdAndRemove(serviceID);
+      return Service.findByIdAndUpdate(serviceID, editedService, { new: true });
     })
     .then(() => {
-
-      return Review.deleteMany({serviceId :serviceID})
-    })
-    .then(() => {
-      return Order.deleteMany({serviceId : serviceID})
-    })
-    .then(()=>{
-      res.status(200).json({ message: "Service Deleted" });
+      res.status(200).json({ message: "Service Updated" });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -118,21 +108,71 @@ exports.deleteService = (req, res, next) => {
     });
 };
 
-exports.getService = async (req,res,next) => {
+exports.deleteService = (req, res, next) => {
+  const serviceID = req.params.serviceID;
+  const userId = req.userId;
+
+  Service.findOne({ _id: serviceID })
+    .then((service) => {
+      if (!service) {
+        const error = new Error('Service not found');
+        error.statusCode = 404;
+        throw error;
+      }
+
+      if (service.provider.toString() !== userId) {
+        const error = new Error('You do not have access to this service');
+        error.statusCode = 403;
+        throw error;
+      }
+
+      // Delete all images associated with the service
+      service.images.forEach((imagePath) => {
+        const fullImagePath = path.join(__dirname, 'images', imagePath);
+        fs.unlink(fullImagePath, (err) => {
+          if (err) {
+            console.error('Failed to delete image:', err);
+          }
+        });
+      });
+
+      // Delete the service
+      return Service.findByIdAndRemove(serviceID);
+    })
+    .then(() => {
+      // Delete all reviews associated with the service
+      return Review.deleteMany({ serviceId: serviceID });
+    })
+    .then(() => {
+      // Delete all orders associated with the service
+      return Order.deleteMany({ serviceId: serviceID });
+    })
+    .then(() => {
+      res.status(200).json({ message: 'Service Deleted' });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getService = async (req, res, next) => {
   const userId = req.userId;
   try {
-    const service = await Service.find({provider: userId})
-    .populate("provider")
-    .populate("category")
-    .exec()
+    const service = await Service.find({ provider: userId })
+      .populate("provider")
+      .populate("category")
+      .exec();
 
     if (!service) {
-      res.status(200).json({service: [], message: "No Services"})
+      res.status(200).json({ service: [], message: "No Services" });
     }
 
-    const modifiedService = services.map((service) => ({
+    const modifiedService = service.map((service) => ({
       ...service._doc,
-      images: service.images.length > 0 ? [service.images[0]] : []
+      images: service.images.length > 0 ? [service.images[0]] : [],
     }));
     res.status(200).json({ message: "Successful", services: modifiedService });
   } catch (error) {
@@ -141,7 +181,7 @@ exports.getService = async (req,res,next) => {
     }
     next(error);
   }
-}
+};
 
 // exports.getAddProduct = (req, res, next) => {
 //   res.render('admin/edit-product', {

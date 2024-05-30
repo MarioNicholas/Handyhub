@@ -4,6 +4,8 @@ const express = require('express');
 
 const serviceController = require('../controllers/service');
 const isAuth = require('../middleware/is-auth');
+const expressValidator = require("express-validator");
+
 
 const router = express.Router();
 
@@ -15,12 +17,16 @@ router.get("/profile", isAuth, serviceController.getProfile);
 router.get("/service/:serviceID", serviceController.getServiceByID);
 router.get("/services/:categoryName", serviceController.getServicesByCategory);
 router.post("/service/order", isAuth, serviceController.orderService);
+router.patch("/service/finish-order/:orderId",isAuth,serviceController.finishOrder);
 
 router.get("/favorite", isAuth, serviceController.getFavorites);
 router.post("/favorite/:serviceID", isAuth, serviceController.postFavorites);
 router.delete("/favorite/:serviceID", isAuth, serviceController.deleteFavorite);
 
-router.post("/review/:serviceID", isAuth, serviceController.addReview);
+router.post("/review/:serviceID", isAuth, [
+  expressValidator.body("rating").trim().notEmpty(),
+  expressValidator.body("review").trim().notEmpty(),
+], serviceController.addReview);
 router.get("/review/:serviceID", serviceController.getReview);
 router.delete("/review/:reviewID", isAuth, serviceController.deleteReview)
 

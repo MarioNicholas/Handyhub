@@ -11,6 +11,11 @@ const Review = require("../models/review");
 exports.getCategory = (req, res, next) => {
   Category.find()
     .then((category) => {
+      if (!category) {
+        const error = new Error("No Category Found");
+        error.statusCode = 404;
+        throw error
+      }
       res.status(200).json({ category: category });
     })
     .catch((err) => {
@@ -25,6 +30,11 @@ exports.getProfile = async (req, res, next) => {
   const userId = req.userId;
   try {
     const user = await User.findById(userId);
+    if (!user) {
+      const error = new Error("No User Found");
+      error.statusCode = 404;
+      throw error
+    }
     const userProfile = {
       id: user._id.toString(),
       name: user.name,
@@ -48,6 +58,11 @@ exports.getServices = (req, res, next) => {
     .populate("provider")
     .populate("category")
     .then((services) => {
+      if (!services) {
+        const error = new Error("No Services Found");
+        error.statusCode = 404;
+        throw error;
+      }
       const modifiedService = services.map((service) => ({
         ...service._doc,
         images: service.images.length > 0 ? [service.images[0]] : []
@@ -76,6 +91,9 @@ exports.getServicesByCategory = async (req, res, next) => {
       .populate("provider")
       .populate("category")
       .exec();
+    if (!services) {
+      res.status(200).json({ message: "No Services", services: [] });
+    }
     const modifiedService = services.map((service) => ({
         ...service._doc,
         images: service.images.length > 0 ? [service.images[0]] : []
@@ -95,6 +113,11 @@ exports.getServiceByID = (req, res, next) => {
     .populate("provider")
     .populate("category")
     .then((service) => {
+      if (!service) {
+        const error = new Error("Service not found");
+        error.statusCode = 404;
+        throw error;
+      }
       res.status(200).json({ service: service });
     })
     .catch((err) => {
@@ -117,6 +140,11 @@ exports.getOrderById = (req, res, next) => {
     })
     .exec()
     .then((orders) => {
+      if (!orders) {
+        const error = new Error("Orders not found");
+        error.statusCode = 404;
+        throw error;
+      }
       res.status(200).json({ orders: orders });
     })
     .catch((err) => {
@@ -227,7 +255,7 @@ exports.orderService = (req, res, next) => {
 
 exports.finishOrder = (req, rest, next) => {
   const userId = req.userId;
-  const orderId = req.body.orderId;
+  const orderId = req.params.orderId;
   const status = "Completed";
   Order.findOne({ _id: orderId, userId: userId })
     .then((order) => {
@@ -286,6 +314,9 @@ exports.getReview = async (req,res,next) => {
   const serviceID = req.params.serviceID;
   try {
     const reviewDoc = await Review.find({serviceId: serviceID}).populate("userId").exec();
+    if (!reviewDoc) {
+      res.status(200).json({message: "Review Empty", review : []})
+    }
     const reviewData = reviewDoc.map((doc) => {return {
       id: doc._id.toString(),
       userId: doc.userId._id.toString(),
