@@ -8,25 +8,6 @@ Handy Hub merupakan sebuah aplikasi platform penyediaan jasa yang bertujuan untu
 | 2. | Nicolas Owen Halim            | 18221095 |
 | 3. | Ivan Leovandi                 | 18221129 |
 
-## Getting Started
-1. **Clone repository ini**
-```
-git clone https://gitlab.informatika.org/tubes-rpl-kelompok-8/gymbro-management-system.git
-```
-2. **Install node modules**
-```
-npm install
-```
-3. **Jalankan development server:**
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
